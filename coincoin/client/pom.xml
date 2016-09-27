@@ -10,7 +10,6 @@
     <packaging>war</packaging>
     <name>client Maven Webapp</name>
     <url>http://maven.apache.org</url>
-
     <build>
         <finalName>client</finalName>
     </build>

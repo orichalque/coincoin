@@ -8,11 +8,11 @@ import java.util.List;
 
 /**
  * Created by Thibault on 27/09/16.
+ * File database with data loaded when the object is built.
  */
 public class RepositoryImpl implements Repository{
 
     private List<Item> items;
-
 
     public RepositoryImpl(List<Item> items) {
         this.items = items;

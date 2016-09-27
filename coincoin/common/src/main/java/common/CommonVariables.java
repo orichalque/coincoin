@@ -1,4 +1,4 @@
-package com.alma.common;
+package common;
 
 /**
  * Created by Thibault on 27/09/16.

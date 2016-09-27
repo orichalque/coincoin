@@ -1,6 +1,6 @@
 package modele;
-import com.alma.InterfaceAcheteur;
 import etats.EtatClient;
+import shared_interfaces.InterfaceAcheteur;
 
 /**
  * Created by Dennis on 27/09/16.

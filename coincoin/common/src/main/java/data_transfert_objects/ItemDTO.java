@@ -1,4 +1,4 @@
-package com.alma.data_transfert_objects;
+package data_transfert_objects;
 
 import com.fasterxml.jackson.annotation.*;
 

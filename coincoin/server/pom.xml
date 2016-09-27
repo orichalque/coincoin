@@ -12,6 +12,14 @@
 
     <name>server</name>
     <url>http://maven.apache.org</url>
+    <dependencies>
+
+    <dependency>
+        <groupId>com.alma</groupId>
+        <artifactId>common</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </dependency>
+    </dependencies>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

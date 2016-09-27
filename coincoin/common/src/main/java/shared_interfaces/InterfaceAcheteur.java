@@ -1,4 +1,4 @@
-package com.alma;
+package shared_interfaces;
 
 /**
  * Created by Dennis on 27/09/16.

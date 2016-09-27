@@ -1,4 +1,13 @@
 [
-
+  {
+    "prix": 52.2,
+    "nom": "canard",
+    "description": "un gros canard"
+  },
+  {
+    "prix": 59.2,
+    "nom": "canard colvert",
+    "description": "un beau canard"
+  }
 
 ]

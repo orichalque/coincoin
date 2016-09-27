@@ -1,15 +1,17 @@
 package data;
 
-import com.alma.common.CommonVariables;
-import com.alma.utils.FileUtil;
-import com.alma.utils.JsonUtil;
+import business.converters.ItemDTOToItemConverter;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.io.Files;
+import common.CommonVariables;
+import data_transfert_objects.ItemDTO;
 import model.Item;
+import utils.JsonUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,14 +35,24 @@ public class RepositoryImpl implements Repository{
     public RepositoryImpl() {
         items = new ArrayList<Item>();
         try {
+            File file;
+            URL url = getClass().getClassLoader().getResource(CommonVariables.DATA_BASE_NAME);
 
-            ClassLoader classLoader = getClass().getClassLoader();
-
-            File file = new File(classLoader.getResource(CommonVariables.DATA_BASE_NAME).getFile());
+            if (url != null) {
+                 file = new File(url.getFile());
+            } else {
+                throw new IOException("The database file can not be found");
+            }
 
             String fileContent = Files.toString(file, Charset.defaultCharset());
-            LOGGER.info(fileContent);
-            items = JsonUtil.deserializeListFromString(fileContent, Item.class);
+
+            List<ItemDTO> itemDTOs = JsonUtil.deserializeListFromString(fileContent, ItemDTO.class);
+
+            //Add all the item into the *database*
+            for (ItemDTO itemDTO : itemDTOs) {
+                items.add(ItemDTOToItemConverter.convert(itemDTO));
+            }
+
         } catch (IOException e) {
             LOGGER.log(Level.WARNING, "Cannot create the database", e);
         }

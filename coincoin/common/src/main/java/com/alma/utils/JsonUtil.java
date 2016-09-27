@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -16,15 +15,11 @@ import java.util.logging.Logger;
 public class JsonUtil {
     private static final Logger LOGGER = Logger.getAnonymousLogger();
 
-    public static <C> List<C> deserializeListFromString(String file, Class C) {
+    public static <C> List<C> deserializeListFromString(String file, Class C) throws IOException {
         List<C> itemList = new ArrayList();
         ObjectMapper objectMapper = new ObjectMapper();
 
-        try {
-            itemList = objectMapper.readValue(file, new TypeReference<List<C>>(){});
-        } catch (IOException e) {
-            LOGGER.log(Level.WARNING, "The database can not be load", e);
-        }
+        itemList = objectMapper.readValue(file, new TypeReference<List<C>>(){});
 
         return itemList;
     }

@@ -1,6 +1,6 @@
 package data;
 
-import model.Item;
+import model.ItemServer;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface Repository {
 
-    public Item getItem(String name);
+    public ItemServer getItem(String name);
 
-    public List<Item> getItems();
+    public List<ItemServer> getItemServers();
 }

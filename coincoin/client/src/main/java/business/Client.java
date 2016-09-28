@@ -1,18 +1,25 @@
-package modele;
+package business;
 import etats.EtatClient;
+import modele.Chrono;
+import modele.Item;
+import modele.Utilisateur;
 import shared_interfaces.InterfaceAcheteur;
+
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 
 /**
  * Created by Dennis on 27/09/16.
  *
  */
-public class Client implements InterfaceAcheteur {
+public class Client extends UnicastRemoteObject implements InterfaceAcheteur {
     private Utilisateur utilisateur;
     private EtatClient etatCourant;
     private Chrono chrono;
     private Item itemCourant;
 
-    public Client(Utilisateur utilisateur, EtatClient etatCourant, Chrono chrono) {
+    public Client(Utilisateur utilisateur, EtatClient etatCourant, Chrono chrono) throws RemoteException {
+        super();
         this.utilisateur = utilisateur;
         this.etatCourant = etatCourant;
         this.chrono = chrono;

@@ -8,5 +8,6 @@ public class CommonVariables {
     private CommonVariables() { }
 
     public final static String DATA_BASE_NAME = "itemDataBase.json";
+    public static final int PORT = 6666;
 
 }

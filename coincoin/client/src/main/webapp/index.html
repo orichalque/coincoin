@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="clientApp">
+<html lang="en" ng-app="coincoinApp">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -32,8 +32,18 @@
         <a class="navbar-brand" href="#">CoinCoin</a>
     </div>
 </div>
+<div class="container">
+    <div class="col-md-12">
+        <div class="col-md-6">
+            <img src="{{img.link}}" alt="{{img.snippet}}" width="500" height="500">
+        </div>
+        <div class="col-md-6">
+            <h1>{{item.nom}}</h1>
+            <p>{{item.description}}</p>
+        </div>
+    </div>
+</div>
 
-<p>{{item.nom}}</p>
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

@@ -6,7 +6,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.io.Files;
 import common.CommonVariables;
 import data_transfert_objects.ItemDTO;
-import model.Item;
+import model.ItemServer;
 import utils.JsonUtil;
 
 import java.io.File;
@@ -26,14 +26,14 @@ public class RepositoryImpl implements Repository{
 
     private static final Logger LOGGER = Logger.getAnonymousLogger();
 
-    private List<Item> items;
+    private List<ItemServer> itemServers;
 
     /**
      * Constructor of the File database
-     * Read the file and deserialize the Item objects
+     * Read the file and deserialize the ItemServer objects
      */
     public RepositoryImpl() {
-        items = new ArrayList<Item>();
+        itemServers = new ArrayList<ItemServer>();
         try {
             File file;
             URL url = getClass().getClassLoader().getResource(CommonVariables.DATA_BASE_NAME);
@@ -50,7 +50,7 @@ public class RepositoryImpl implements Repository{
 
             //Add all the item into the *database*
             for (ItemDTO itemDTO : itemDTOs) {
-                items.add(ItemDTOToItemConverter.convert(itemDTO));
+                itemServers.add(ItemDTOToItemConverter.convert(itemDTO));
             }
 
         } catch (IOException e) {
@@ -61,21 +61,21 @@ public class RepositoryImpl implements Repository{
     /**
      * Return the corresponding item in the database
      * @param name the name
-     * @return the corresponding Item
+     * @return the corresponding ItemServer
      */
-    public Item getItem(final String name) {
-        return Iterables.tryFind(items, new Predicate<Item>() {
-            public boolean apply(Item input) {
-                return (input.getNom().equals(name));
+    public ItemServer getItem(final String name) {
+        return Iterables.tryFind(itemServers, new Predicate<ItemServer>() {
+            public boolean apply(ItemServer input) {
+                return input.getNom().equals(name);
             }
         }).orNull();
     }
 
     /**
      * Return the full database
-     * @return the list of items
+     * @return the list of itemServers
      */
-    public List<Item> getItems() {
-        return items;
+    public List<ItemServer> getItemServers() {
+        return itemServers;
     }
 }

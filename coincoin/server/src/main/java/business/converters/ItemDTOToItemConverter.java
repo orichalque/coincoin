@@ -1,23 +1,27 @@
 package business.converters;
 
 import data_transfert_objects.ItemDTO;
-import model.Item;
+import model.ItemServer;
+import model.ItemEnAttente;
 
 /**
  * Created by Thibault on 27/09/2016.
- * Convert a data transfert object Item to a data object
+ * Convert a data transfert object ItemServer to a data object
  */
 public class ItemDTOToItemConverter {
 
-    public static Item convert(ItemDTO itemDTO) {
-        Item item = new Item();
+    private ItemDTOToItemConverter() { }
+
+    public static ItemServer convert(ItemDTO itemDTO) {
+        ItemServer itemServer = new ItemServer();
         if (itemDTO != null) {
-            item.setNom(itemDTO.getNom());
-            item.setDescription(itemDTO.getDescription());
-            item.setPrix(itemDTO.getPrix());
+            itemServer.setNom(itemDTO.getNom());
+            itemServer.setDescription(itemDTO.getDescription());
+            itemServer.setPrix(itemDTO.getPrix());
         }
-        //TODO add item state
-        item.setEtatItem(null);
-        return item;
+
+        //FIXME Singleton pour l'etat?
+        itemServer.setEtatItem(new ItemEnAttente());
+        return itemServer;
     }
 }

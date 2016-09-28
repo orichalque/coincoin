@@ -3,16 +3,17 @@ package model;
 /**
  * Created by E104607D on 27/09/16.
  */
-public class Item {
+public class ItemServer {
     private String nom;
     private String description;
     private double prix;
     private EtatItem etatItem;
 
-    public Item() {
+    public ItemServer() {
+        //We don't build Items, they're made from the Json File
     }
 
-    public Item(String nom) {
+    public ItemServer(String nom) {
         this.nom = nom;
     }
 

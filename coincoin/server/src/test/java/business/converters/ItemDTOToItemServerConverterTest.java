@@ -1,7 +1,7 @@
 package business.converters;
 
 import data_transfert_objects.ItemDTO;
-import model.Item;
+import model.ItemServer;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,9 +10,9 @@ import org.junit.Test;
  * Created by Thibault on 27/09/2016.
  * Tests for the ItemDTOToItemConverter class
  */
-public class ItemDTOToItemConverterTest {
+public class ItemDTOToItemServerConverterTest {
 
-    private Item item;
+    private ItemServer itemServer;
     private ItemDTO itemDTO;
 
     @Before
@@ -25,16 +25,16 @@ public class ItemDTOToItemConverterTest {
 
      @Test
      public void testConvertOk() {
-         item = ItemDTOToItemConverter.convert(itemDTO);
-         Assert.assertEquals("description", item.getDescription());
-         Assert.assertEquals("nom", item.getNom());
-         Assert.assertEquals(50.0, item.getPrix(), 0.001);
+         itemServer = ItemDTOToItemConverter.convert(itemDTO);
+         Assert.assertEquals("description", itemServer.getDescription());
+         Assert.assertEquals("nom", itemServer.getNom());
+         Assert.assertEquals(50.0, itemServer.getPrix(), 0.001);
      }
 
     @Test
     public void testConvertNullOk() {
         try {
-            item = ItemDTOToItemConverter.convert(null);
+            itemServer = ItemDTOToItemConverter.convert(null);
         } catch (Exception e) {
             Assert.fail();
         }

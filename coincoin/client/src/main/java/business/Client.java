@@ -26,9 +26,11 @@ import java.util.logging.Logger;
  *
  */
 public class Client extends UnicastRemoteObject implements InterfaceAcheteur {
+    //constantes
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private static final Logger LOGGER = Logger.getAnonymousLogger();
 
+    //etats
     private ClientAttente etatAttente = new ClientAttente(this);
     private ClientParticipant etatParticipant= new ClientParticipant(this);
     private ClientTermine etatTermine= new ClientTermine(this);
@@ -41,27 +43,11 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur {
     private ItemClient itemCourant;
     private InterfaceServeurVente serveurVente;
 
-    public Client()throws RemoteException {
-        super();
-        try {
 
-            Registry registry = LocateRegistry.getRegistry(CommonVariables.PORT);
-
-            InterfaceServeurVente serveurVente = (InterfaceServeurVente) registry.lookup("connexion");
-
-            LOGGER.info(serveurVente.toString());
-
-            serveurVente.insc_acheteur("nomParDefaut");
-        } catch (Exception e) {
-            LOGGER.warning(e.getMessage());
-        }
-    }
-
-    public Client(Utilisateur utilisateur, Chrono chrono) throws RemoteException {
+    public Client(Utilisateur utilisateur) throws RemoteException {
         super();
         this.utilisateur = utilisateur;
         this.etatCourant = etatAttente;
-        this.chrono = chrono;
         this.essaiEtatString = "attente";
         try {
 
@@ -71,12 +57,17 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur {
 
             LOGGER.info(serveurVente.toString());
 
-            serveurVente.insc_acheteur(utilisateur.getPseudo());
+            inscription();
         } catch (Exception e) {
             LOGGER.warning(e.getMessage());
         }
     }
 
+    /**
+     * Marque le début d'une vente.
+     * Utilisée par le serveur.
+     * @param nouvelItemDTO nouvel item au format string
+     */
     public void nouvelle_soumission(String nouvelItemDTO) {
         //1-Transformation du DTO en item et changement item
         itemCourant = getItemFromDTO(nouvelItemDTO);
@@ -88,6 +79,11 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur {
     }
 
 
+    /**
+     * Marque la fin de la vente.
+     * Utilisée par le serveur.
+     * @param nomAcheteur nouveau propriétaire de l'item
+     */
     public void objet_vendu(String nomAcheteur) {
         //chgt etat
         essaiEtatString="attente";
@@ -96,6 +92,11 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur {
     }
 
 
+    /**
+     * Methode de mise a jour du prix.
+     * Utilisée par le serveur.
+     * @param prix nouveau prix
+     */
     public void nouveau_prix(double prix) {
         setPrix(prix);
         //MAJ IHM
@@ -105,7 +106,7 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur {
      * Return an item from a String by converting a DTO
      * @param itemAsString the user dto in String format
      * @return the corresponding ItemClient
-     * @throws IOException
+     * @throws IOException string mal formée
      */
     private ItemClient getItemFromDTO(String itemAsString) {
         ItemClient item = null;
@@ -113,7 +114,7 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur {
         try {
             item = ItemDTOToItemConverter.convert(OBJECT_MAPPER.readValue(itemAsString, ItemDTO.class));
         } catch (IOException exception) {
-            LOGGER.log(Level.WARNING, "Cannot deserialize the User", exception);
+            LOGGER.log(Level.WARNING, "Cannot deserialize the item", exception);
         }
 
         return item;
@@ -121,13 +122,36 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur {
 
 
     //Methodes à envoyer au serveur
-
+    /**
+     * méthode pour proposer un nouveau prix.
+     * Appelle la methode de renchérissement de son état courant qui appellera au besoin celle du serveur via RMI.
+     * TODO à synchronized avec la fin du chrono car il ne faut surtout pas que les deux s'execute en meme temps
+     * @param prix le nouveau prix
+     */
     public void rencherir(int prix){
         if (prix > itemCourant.getPrix()) {
             etatCourant.rencherir(prix);
         }else{
             LOGGER.info("prix trop bas");
         }
+    }
+
+    /**
+     * Inscrit l'acheteur courant aux encheres.
+     * Appelle la méthode d'inscription du serveur via RMI.
+     */
+    public void inscription(){
+        serveurVente.insc_acheteur(utilisateur.getPseudo());
+    }
+
+    /**
+     * Termine la vente pour cet acheteur suite à la fin du chrono
+     * Appelle la méthode de tps écoulé du serveur via RMI.
+     * TODO synchronised avec rencherissement
+     * @see this.rencherir
+     */
+    public void temps_ecoule(){
+        serveurVente.tempsEcoule(utilisateur.getPseudo());
     }
 
 

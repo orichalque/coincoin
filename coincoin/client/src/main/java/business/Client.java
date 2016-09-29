@@ -128,7 +128,7 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur {
      * TODO à synchronized avec la fin du chrono car il ne faut surtout pas que les deux s'execute en meme temps
      * @param prix le nouveau prix
      */
-    public void rencherir(int prix){
+    public void rencherir(int prix) throws RemoteException {
         if (prix > itemCourant.getPrix()) {
             etatCourant.rencherir(prix);
         }else{
@@ -140,7 +140,7 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur {
      * Inscrit l'acheteur courant aux encheres.
      * Appelle la méthode d'inscription du serveur via RMI.
      */
-    public void inscription(){
+    public void inscription() throws RemoteException {
         serveurVente.insc_acheteur(utilisateur.getPseudo());
     }
 
@@ -150,7 +150,7 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur {
      * TODO synchronised avec rencherissement
      * @see this.rencherir
      */
-    public void temps_ecoule(){
+    public void temps_ecoule() throws RemoteException {
         serveurVente.tempsEcoule(utilisateur.getPseudo());
     }
 

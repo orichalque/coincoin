@@ -2,6 +2,7 @@ package etats;
 
 import business.Client;
 
+import java.rmi.RemoteException;
 import java.util.logging.Logger;
 
 /**
@@ -16,7 +17,7 @@ public abstract class EtatClient {
 
     public abstract void action();
 
-    public  void rencherir(int prix){
+    public void rencherir(int prix) throws RemoteException {
         LOGGER.warning("Impossible de renchérir");
     }
 }

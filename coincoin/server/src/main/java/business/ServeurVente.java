@@ -73,7 +73,13 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
      * @param prix the new price
      */
     public void notifyAllNewPrice(int prix) {
-        interfaceAcheteurList.forEach((interfaceAcheteur) -> interfaceAcheteur.nouveau_prix(prix));
+        interfaceAcheteurList.forEach((interfaceAcheteur) -> {
+            try {
+                interfaceAcheteur.nouveau_prix(prix);
+            } catch (RemoteException e) {
+                LOGGER.log(Level.WARNING, "erreur notifier tlm du nouveau prix", e);
+            }
+        });
     }
 
     /**

@@ -15,7 +15,7 @@ public class ItemClient {
     }
 
     public ItemClient() {
-        //TODO
+        //Construct par defaut
     }
 
     public double getPrix() {

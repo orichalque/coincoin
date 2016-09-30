@@ -21,6 +21,8 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static java.lang.Thread.sleep;
+
 /**
  * Created by Dennis on 27/09/16.
  *
@@ -58,6 +60,7 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur {
             LOGGER.info(serveurVente.toString());
 
             inscription();
+            startChrono();
         } catch (Exception e) {
             LOGGER.warning(e.getMessage());
         }
@@ -76,6 +79,7 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur {
         //3- changer l'etatCourant en participant
         essaiEtatString="participant";
         etatCourant=etatParticipant;
+        startChrono();
     }
 
 
@@ -128,7 +132,7 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur {
      * TODO à synchronized avec la fin du chrono car il ne faut surtout pas que les deux s'execute en meme temps
      * @param prix le nouveau prix
      */
-    public void rencherir(int prix) throws RemoteException {
+    public synchronized void rencherir(int prix) throws RemoteException {
         if (prix > itemCourant.getPrix()) {
             etatCourant.rencherir(prix);
         }else{
@@ -150,8 +154,22 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur {
      * TODO synchronised avec rencherissement
      * @see this.rencherir
      */
-    public void temps_ecoule() throws RemoteException {
+    public synchronized void temps_ecoule() throws RemoteException {
+        etatCourant = etatTermine;
         serveurVente.tempsEcoule(utilisateur.getPseudo());
+    }
+
+    public void startChrono() {
+        try {
+            sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        try {
+            temps_ecoule();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
 

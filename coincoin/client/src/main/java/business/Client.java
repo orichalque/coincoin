@@ -1,5 +1,7 @@
 package business;
 import business.converters.ItemDTOToItemConverter;
+import business.converters.UtilisateurToUtilisateurDTOConverter;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import common.CommonVariables;
 import data_transfert_objects.ItemDTO;
@@ -41,7 +43,6 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur {
 
     private Utilisateur utilisateur;
     private String essaiEtatString;
-    private Chrono chrono;
     private ItemClient itemCourant;
     private InterfaceServeurVente serveurVente;
 
@@ -145,7 +146,13 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur {
      * Appelle la méthode d'inscription du serveur via RMI.
      */
     public void inscription() throws RemoteException {
-        serveurVente.insc_acheteur(utilisateur.getPseudo());
+        try {
+            serveurVente.insc_acheteur(OBJECT_MAPPER.writeValueAsString(UtilisateurToUtilisateurDTOConverter.convert(utilisateur)));
+        } catch (RemoteException e) {
+            LOGGER.log(Level.WARNING, String.format("Cannot send the new user to the serveur"), e);
+        } catch (JsonProcessingException e) {
+            LOGGER.log(Level.WARNING, String.format("Cannot serialize the user "), e);
+        }
     }
 
     /**
@@ -159,6 +166,9 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur {
         serveurVente.tempsEcoule(utilisateur.getPseudo());
     }
 
+    /**
+     * Lancé a l'initialisation du client pour créer un timer sur la vente.
+     */
     public void startChrono() {
         try {
             sleep(10000);
@@ -191,13 +201,6 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur {
         this.etatCourant = etatCourant;
     }
 
-    public Chrono getChrono() {
-        return chrono;
-    }
-
-    public void setChrono(Chrono chrono) {
-        this.chrono = chrono;
-    }
 
     public ItemClient getItemCourant() {
         return itemCourant;

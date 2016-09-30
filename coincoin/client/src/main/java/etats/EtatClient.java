@@ -30,7 +30,7 @@ public abstract class EtatClient {
      * @param prix
      * @throws RemoteException
      */
-    public void rencherir(int prix) throws RemoteException {
+    public void rencherir(double prix) throws RemoteException {
         LOGGER.warning("Impossible de renchérir");
     }
 }

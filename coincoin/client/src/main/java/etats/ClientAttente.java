@@ -17,7 +17,7 @@ public class ClientAttente extends EtatClient{
     }
 
     @Override
-    public void rencherir(int prix) throws RemoteException {
+    public void rencherir(double prix) throws RemoteException {
         super.rencherir(prix);
         LOGGER.warning("Vous êtes en attente");
     }

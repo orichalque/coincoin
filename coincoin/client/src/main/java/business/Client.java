@@ -132,7 +132,7 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur {
      * TODO à synchronized avec la fin du chrono car il ne faut surtout pas que les deux s'execute en meme temps
      * @param prix le nouveau prix
      */
-    public synchronized void rencherir(int prix) throws RemoteException {
+    public synchronized void rencherir(double prix) throws RemoteException {
         if (prix > itemCourant.getPrix()) {
             etatCourant.rencherir(prix);
         }else{

@@ -12,6 +12,10 @@ public class Utilisateur {
         this.mail = mail;
     }
 
+    public Utilisateur() {
+        //constructeur par défaut
+    }
+
     public String getPseudo() {
         return pseudo;
     }

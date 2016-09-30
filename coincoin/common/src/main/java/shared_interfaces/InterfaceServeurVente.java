@@ -18,7 +18,7 @@ public interface InterfaceServeurVente extends Remote {
      * @param acheteur
      * @param prix
      */
-    public void rencherir(String acheteur, int prix) throws RemoteException;
+    public void rencherir(String acheteur, double prix) throws RemoteException;
 
     /**
      * tell the serveur that the time is over for the current acheteur

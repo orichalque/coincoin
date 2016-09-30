@@ -18,7 +18,7 @@ public class ClientTermine extends EtatClient{
     }
 
     @Override
-    public void rencherir(int prix) throws RemoteException {
+    public void rencherir(double prix) throws RemoteException {
         super.rencherir(prix);
         LOGGER.warning("Votre vente est terminée");
     }

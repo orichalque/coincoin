@@ -19,7 +19,7 @@ public class ClientParticipant extends EtatClient{
     }
 
     @Override
-    public void rencherir(int prix) throws RemoteException {
+    public void rencherir(double prix) throws RemoteException {
         client.getServeurVente().rencherir(client.getUtilisateur().getPseudo(), prix);
     }
 }

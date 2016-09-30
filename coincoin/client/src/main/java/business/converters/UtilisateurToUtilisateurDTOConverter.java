@@ -9,6 +9,8 @@ import modele.Utilisateur;
  * Convert a data transfert object Utilisateur to a data object
  */
 public class UtilisateurToUtilisateurDTOConverter {
+
+
     /**
      * Convert an Utilisateur to an UtilisateurDTO
      *

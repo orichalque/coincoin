@@ -3,23 +3,19 @@ package modele;
 /**
  * Created by Dennis on 27/09/16.
  */
-public class Item {
+public class ItemClient {
     protected double prix;
     protected String nom;
     protected String description;
 
-    public Item(double prix, String nom, String description) {
+    public ItemClient(double prix, String nom, String description) {
         this.prix = prix;
         this.nom = nom;
         this.description = description;
     }
 
-    public Item() {
-        //TODO
-    }
-
-    public void changementEtat () {
-        //TODO
+    public ItemClient() {
+        //Construct par defaut
     }
 
     public double getPrix() {

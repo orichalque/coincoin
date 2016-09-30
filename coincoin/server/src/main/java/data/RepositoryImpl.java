@@ -1,7 +1,6 @@
 package data;
 
 import business.converters.ItemDTOToItemConverter;
-import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.io.Files;
 import common.CommonVariables;
@@ -15,6 +14,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,7 +33,7 @@ public class RepositoryImpl implements Repository{
      * Read the file and deserialize the ItemServer objects
      */
     public RepositoryImpl() {
-        itemServers = new ArrayList<ItemServer>();
+        itemServers = new ArrayList<>();
         try {
             File file;
             URL url = getClass().getClassLoader().getResource(CommonVariables.DATA_BASE_NAME);
@@ -63,19 +63,23 @@ public class RepositoryImpl implements Repository{
      * @param name the name
      * @return the corresponding ItemServer
      */
+    @Override
     public ItemServer getItem(final String name) {
-        return Iterables.tryFind(itemServers, new Predicate<ItemServer>() {
-            public boolean apply(ItemServer input) {
-                return input.getNom().equals(name);
-            }
-        }).orNull();
+        return Iterables.tryFind(itemServers, input -> input.getNom().equals(name)).orNull();
     }
 
     /**
      * Return the full database
      * @return the list of itemServers
      */
+    @Override
     public List<ItemServer> getItemServers() {
         return itemServers;
+    }
+
+    @Override
+    public ItemServer getRandomItem() {
+        Random random = new Random();
+        return itemServers.get(random.nextInt(itemServers.size()));
     }
 }

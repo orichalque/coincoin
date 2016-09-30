@@ -117,7 +117,7 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
      * @param prix the new price
      */
     @Override
-    public void rencherir(String acheteurAsString, int prix) {
+    public void rencherir(String acheteurAsString, double prix) {
         if (prix > currentItem.getPrix()) {
             currentItem.setPrix(prix);
             currentWinner = getUtilisateurFromDTO(acheteurAsString);
@@ -147,7 +147,7 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
      * Notify all the buyers of the new price of the item
      * @param prix the new price
      */
-    public void modifyPrice(int prix) {
+    public void modifyPrice(double prix) {
         interfaceAcheteurList.forEach(interfaceAcheteurWithUser -> {
             try {
                 interfaceAcheteurWithUser.getInterfaceAcheteur().nouveau_prix(prix);

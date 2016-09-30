@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  */
 public class Application {
 
-    private final static Logger LOGGER = Logger.getAnonymousLogger("Server");
+    private final static Logger LOGGER = Logger.getLogger("Server logs");
 
     /**
      * Main class
@@ -29,8 +29,10 @@ public class Application {
             registry = LocateRegistry.createRegistry(CommonVariables.PORT);
             LOGGER.info("Launching the registry");
             ServeurVente serveurVente = new ServeurVente();
-            registry.bind("serveur", serveurVente);
+            serveurVente.run();
 
+            registry.bind("serveur", serveurVente);
+            LOGGER.info("Server successfully launched");
         } catch (RemoteException e) {
             LOGGER.log(Level.WARNING, "Cannot bind the server with RMI", e);
         } catch (AlreadyBoundException e) {

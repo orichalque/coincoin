@@ -18,6 +18,6 @@ public class UtilisateurDTOToUtilisateurTest {
 
         UtilisateurServeur utilisateur = UtilisateurDTOToUtilisateurConverter.convert(utilisateurDTO);
         Assert.assertEquals(utilisateur.getEmail(), utilisateurDTO.getEmail());
-        Assert.assertEquals(utilisateur.getNom(), utilisateurDTO.getEmail());
+        Assert.assertEquals(utilisateur.getNom(), utilisateurDTO.getNom());
     }
 }

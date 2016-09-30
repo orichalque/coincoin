@@ -10,6 +10,7 @@
     <!-- Bootstrap -->
     <link href="lib/css/bootstrap.min.css" rel="stylesheet">
     <link href="lib/css/bootstrap-theme.min.css" rel="stylesheet">
+    <link href="lib/css/coincoin.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -24,27 +25,59 @@
 </head>
 <body ng-controller="itemController">
 
-<div class="container">
-    <div class="navbar-header">
-        <img src="/img/coincoin.png" alt="logo coincoin" height="50" width="50">
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <img src="/img/coincoin.png" alt="logo coincoin" height="50">
+        </div>
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">CoinCoin</a>
+        </div>
     </div>
-    <div class="navbar-header">
-        <a class="navbar-brand" href="#">CoinCoin</a>
-    </div>
-</div>
-<div class="container">
+</nav>
+
+<div class="container mainContent">
     <div class="col-md-12">
         <div class="col-md-6">
-            <img src="{{img.link}}" alt="{{img.snippet}}" width="500" height="500">
+            <img class="border" src="{{img.link}}" alt="{{img.snippet}}" width="100%" height="100%">
+            Image récuperée automatiquement sur Google Image.
         </div>
         <div class="col-md-6">
-            <h1>{{item.nom}}</h1>
-            <p>{{item.description}}</p>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Vente en cours: <b>{{item.nom}}</b></h3>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-12">
+                        Prix misé:
+                    </div>
+                    <div class="col-md-12">
+                        <h1 style="margin-top:0">{{prixActuel}} €</h1>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12" style="margin-top:20px">
+                            <div class="col-md-4">
+                                <label for="enchere">Nouveau Prix (€):</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input ng-model="prixPropose" type="number" min="{{prixActuel + 1}}" required class="form-control" id="enchere">
+                            </div>
+                            <div class="col-md-4">
+                                <button ng-click="changerPrix()" type="button" class="btn btn btn-success">Encherir</button>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="col-md-11">
+                    <div class="col-md-12">
+                        <p>
+                            <i>{{item.description}}</i>
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
-
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->

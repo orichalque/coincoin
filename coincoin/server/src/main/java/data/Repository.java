@@ -14,4 +14,6 @@ public interface Repository {
     public ItemServer getItem(String name);
 
     public List<ItemServer> getItemServers();
+
+    ItemServer getRandomItem();
 }

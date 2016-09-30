@@ -33,13 +33,13 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur {
     private static final Logger LOGGER = Logger.getAnonymousLogger();
 
     //etats
+    private EtatClient etatCourant;
     private ClientAttente etatAttente = new ClientAttente(this);
     private ClientParticipant etatParticipant= new ClientParticipant(this);
     private ClientTermine etatTermine= new ClientTermine(this);
 
 
     private Utilisateur utilisateur;
-    private EtatClient etatCourant;
     private String essaiEtatString;
     private Chrono chrono;
     private ItemClient itemCourant;

@@ -11,12 +11,25 @@ import java.util.logging.Logger;
 public abstract class EtatClient {
     protected Client client;
     protected static final Logger LOGGER = Logger.getAnonymousLogger();
+
+    /**
+     *
+     * @param client
+     */
     public EtatClient(Client client) {
         this.client = client;
     }
 
+    /**
+     *
+     */
     public abstract void action();
 
+    /**
+     *
+     * @param prix
+     * @throws RemoteException
+     */
     public void rencherir(int prix) throws RemoteException {
         LOGGER.warning("Impossible de renchérir");
     }

@@ -42,7 +42,7 @@ public class ClientParticipantTest {
 
     @Test
     public void testRencherir() throws Exception {
-      /*  Utilisateur user = new Utilisateur("pseudo", "mail");
+        Utilisateur user = new Utilisateur("pseudo", "mail");
         Mockito.when(client.getServeurVente()).thenReturn(interfaceServeurVente);
         Mockito.when(client.getUtilisateur()).thenReturn(user);
 
@@ -52,7 +52,7 @@ public class ClientParticipantTest {
                 Object[] objects = invocationOnMock.getArguments();
 
                 Assert.assertEquals("pseudo", (String) objects[0]);
-                Assert.assertEquals(50, (int) objects[1]);
+                Assert.assertTrue(50 == (double) objects[1]);
                 return null;
             }
         }).when(interfaceServeurVente).rencherir(Mockito.anyString(), Mockito.anyInt());
@@ -60,6 +60,6 @@ public class ClientParticipantTest {
         etatClient.rencherir(50);
 
         Mockito.verify(interfaceServeurVente, Mockito.times(1)).rencherir(Mockito.anyString(), Mockito.anyInt());
-    */
+
     }
 }

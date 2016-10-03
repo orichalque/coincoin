@@ -65,4 +65,24 @@ public class UtilisateurDTO {
     public void setAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UtilisateurDTO that = (UtilisateurDTO) o;
+
+        if (!email.equals(that.email)) return false;
+        if (!nom.equals(that.nom)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = email.hashCode();
+        result = 31 * result + nom.hashCode();
+        return result;
+    }
 }

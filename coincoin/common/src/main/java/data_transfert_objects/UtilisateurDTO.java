@@ -3,6 +3,7 @@ package data_transfert_objects;
 import com.fasterxml.jackson.annotation.*;
 
 import javax.annotation.Generated;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,7 +16,7 @@ import java.util.Map;
         "email",
         "nom"
 })
-public class UtilisateurDTO {
+public class UtilisateurDTO implements Serializable{
 
     @JsonProperty("email")
     private String email;

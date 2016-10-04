@@ -29,14 +29,14 @@ public class Application {
             registry = LocateRegistry.createRegistry(CommonVariables.PORT);
             LOGGER.info("Launching the registry");
             ServeurVente serveurVente = new ServeurVente();
-            serveurVente.run();
-
             registry.bind("serveur", serveurVente);
             LOGGER.info("Server successfully launched");
+            serveurVente.run();
+
         } catch (RemoteException e) {
             LOGGER.log(Level.WARNING, "Cannot bind the server with RMI", e);
         } catch (AlreadyBoundException e) {
-            LOGGER.log(Level.WARNING, "Server alread bound", e);
+            LOGGER.log(Level.WARNING, "Server already bound", e);
         }
     }
 }

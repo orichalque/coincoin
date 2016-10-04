@@ -18,8 +18,10 @@ public class UtilisateurToUtilisateurDTOConverter {
      */
     public static UtilisateurDTO convert(Utilisateur utilisateurServer) {
         UtilisateurDTO utilisateurDTO = new UtilisateurDTO();
-        utilisateurDTO.setNom(utilisateurServer.getPseudo());
-        utilisateurDTO.setEmail(utilisateurServer.getMail());
+        if (utilisateurServer != null) {
+            utilisateurDTO.setNom(utilisateurServer.getPseudo());
+            utilisateurDTO.setEmail(utilisateurServer.getMail());
+        }
         return utilisateurDTO;
     }
 }

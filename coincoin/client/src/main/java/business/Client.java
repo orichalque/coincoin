@@ -12,6 +12,7 @@ import etats.EtatClient;
 import modele.Chrono;
 import modele.ItemClient;
 import modele.Utilisateur;
+import org.springframework.stereotype.Component;
 import shared_interfaces.InterfaceAcheteur;
 import shared_interfaces.InterfaceServeurVente;
 
@@ -104,7 +105,8 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur {
      */
     public void nouveau_prix(double prix) {
         setPrix(prix);
-        //MAJ IHM
+        //MAJ
+
     }
 
     /**

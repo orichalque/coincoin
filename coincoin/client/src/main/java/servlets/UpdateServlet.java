@@ -2,6 +2,7 @@ package servlets;
 
 import business.Client;
 import business.converters.ItemToItemDTOConverter;
+import business.converters.UtilisateurToUtilisateurDTOConverter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import common.CommonVariables;
 import modele.ItemClient;
@@ -14,7 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Created by E104607D on 05/10/16.
+ * Created by Thibault on 05/10/16.
+ * Servlet used to update the item. Called every 3 seconds by the web app
  */
 @WebServlet(name = "upd", urlPatterns = "/update")
 public class UpdateServlet extends HttpServlet {

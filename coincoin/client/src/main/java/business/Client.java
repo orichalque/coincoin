@@ -43,6 +43,7 @@ public class Client implements InterfaceAcheteur {
 
     private Utilisateur utilisateur;
     private String essaiEtatString;
+
     private ItemClient itemCourant;
     private InterfaceServeurVente serveurVente;
 

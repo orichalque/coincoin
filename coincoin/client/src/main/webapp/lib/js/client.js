@@ -1,9 +1,20 @@
 
+/**
+ * Angular app linked to <html> tag of index.html
+ */
 var coincoinApp = angular.module('coincoinApp', []);
 
-coincoinApp.controller('itemController', function itemController($scope, $http) {
+/**
+ * Angular controller linked to <body> tag of index.html
+ */
+coincoinApp.controller('itemController', function itemController($scope, $http, $interval) {
 
-    $scope.keyapi ="AIzaSyChJwwtkZUbukQ8Mk-Q6uI6GigZ7t2-T5s"
+    /**
+     *
+     * Google custom search request
+     * Used to find the first occurence of an img search
+     */
+    $scope.keyapi =""//"AIzaSyChJwwtkZUbukQ8Mk-Q6uI6GigZ7t2-T5s"
     $scope.cx = "000337515704215858772:qphvdedtcsw"
     $scope.item =
     {
@@ -24,10 +35,41 @@ coincoinApp.controller('itemController', function itemController($scope, $http) 
         $scope.data = response.statusText;
     });
 
+    /**
+     * Used to change the price of the item
+     */
     $scope.changerPrix = function() {
         if ($scope.prixPropose > $scope.prixActuel) {
-            $scope.prixActuel = $scope.prixPropose;
+            var parameters = {nom:$scope.item.nom,newPrice:$scope.prixPropose}
+            $http({
+                method: "POST",
+                url: "/update",
+                params: parameters
+
+            }).then(function mySucces(response) {
+                $scope.prixActuel = $scope.prixPropose;
+            }, function myError(response) {
+                console.log(response.data);
+            });
         }
     };
+
+    /**
+     * This function will be called every 2sec
+     * Used to refresh the UI
+     */
+    $interval(updateInterface, 2000);
+
+    function updateInterface() {
+        $http({
+            method : "GET",
+            url : "/update"
+        }).then(function mySucces(response) {
+            $scope.data = response.data;
+            console.log(response.data);
+        }, function myError(response) {
+            console.log(response.data);
+        });
+    }
 
 });

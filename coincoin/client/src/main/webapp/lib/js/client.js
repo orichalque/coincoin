@@ -43,7 +43,7 @@ coincoinApp.controller('itemController', function itemController($scope, $http, 
             var parameters = {nom:$scope.item.nom,newPrice:$scope.prixPropose}
             $http({
                 method: "POST",
-                url: "/update",
+                url: "/bid",
                 params: parameters
 
             }).then(function mySucces(response) {

@@ -16,12 +16,18 @@ coincoinApp.controller('itemController', function itemController($scope, $http, 
      */
     $scope.keyapi =""//"AIzaSyChJwwtkZUbukQ8Mk-Q6uI6GigZ7t2-T5s"
     $scope.cx = "000337515704215858772:qphvdedtcsw"
+
+    $scope.authentified = false;
+    $scope.name;
+    $scope.mail;
+
     $scope.item =
     {
         "nom": "Magnifique canard",
         "description": "Un magnifique canard idéal pour commencer une collection de canards (vivants). Volaille en très bon état. aucune plume manquante ! cause : Décès du proprietaire.",
         "prix": 120
     };
+
     $scope.prixActuel = $scope.item.prix;
     $scope.prixPropose = $scope.prixActuel + 1;
     $scope.requestUrl = "https://www.googleapis.com/customsearch/v1?key="+$scope.keyapi+"&cx="+$scope.cx+"&q="+$scope.item.nom+"&searchType=image&num=1"
@@ -61,13 +67,28 @@ coincoinApp.controller('itemController', function itemController($scope, $http, 
     $interval(updateInterface, 2000);
 
     function updateInterface() {
+        if ($scope.authentified) {
+            $http({
+                method : "GET",
+                url : "/update"
+            }).then(function mySucces(response) {
+                $scope.data = response.data;
+                console.log(response.data);
+            }, function myError(response) {
+                console.log(response.data);
+            });
+        }
+    }
+
+    $scope.authentify = function() {
         $http({
-            method : "GET",
-            url : "/update"
-        }).then(function mySucces(response) {
-            $scope.data = response.data;
-            console.log(response.data);
-        }, function myError(response) {
+            method : "POST",
+            url : "/authentify",
+            params : {"nom":$scope.name, "mail":$scope.mail}
+        }).then(function success(response) {
+            $scope.authentified = true;
+            console.log("successfully logged");
+        }, function error(response) {
             console.log(response.data);
         });
     }

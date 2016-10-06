@@ -37,7 +37,7 @@
 </nav>
 
 <div class="container mainContent">
-    <div class="col-md-12">
+    <div class="col-md-12" ng-show="authentified">
         <div class="col-md-6">
             <img class="border" src="{{img.link}}" alt="{{img.snippet}}" width="100%" height="100%">
             Image récuperée automatiquement sur Google Image.
@@ -63,7 +63,7 @@
                                 <input ng-model="prixPropose" type="number" min="{{prixActuel + 1}}" required class="form-control" id="enchere">
                             </div>
                             <div class="col-md-4">
-                                <button ng-click="changerPrix()" type="button" class="btn btn btn-success">Encherir</button>
+                                <button ng-click="changerPrix()" type="button" class="btn btn-success">Encherir</button>
                             </div>
                         </div>
                     </div>
@@ -74,6 +74,20 @@
                         </p>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12" ng-show="!authentified">
+        <div class="panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title"><b>Authentification</b></h3>
+            </div>
+            <div class="panel-body">
+                <form novalidate>
+                    Nom: <input type="text" ng-model="name" required class="form-control">
+                    E-mail: <input type="text" ng-model="mail" required class="form-control">
+                    <button ng-click="authentify()" class="btn btn-success">Authentification</button>
+                </form>
             </div>
         </div>
     </div>

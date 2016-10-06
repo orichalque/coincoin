@@ -30,7 +30,7 @@ import static java.lang.Thread.sleep;
  * Created by Dennis on 27/09/16.
  *
  */
-public class Client extends UnicastRemoteObject implements InterfaceAcheteur {
+public class Client implements InterfaceAcheteur {
     //constantes
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private static final Logger LOGGER = Logger.getAnonymousLogger();
@@ -49,7 +49,6 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur {
 
 
     public Client(Utilisateur utilisateur) throws RemoteException {
-        super();
         this.utilisateur = utilisateur;
         this.etatCourant = etatAttente;
         this.essaiEtatString = "attente";
@@ -104,7 +103,7 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur {
      * @param prix nouveau prix
      */
     public void nouveau_prix(double prix) {
-        setPrix(prix);
+        itemCourant.setPrix(prix);
         //MAJ
 
     }
@@ -210,10 +209,6 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur {
 
     public void setItemCourant(ItemClient itemCourant) {
         this.itemCourant = itemCourant;
-    }
-
-    public void setPrix(double nouveauPrix){
-        itemCourant.setPrix(nouveauPrix);
     }
 
     public InterfaceServeurVente getServeurVente() {

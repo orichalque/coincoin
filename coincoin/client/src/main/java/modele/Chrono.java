@@ -1,6 +1,7 @@
 package modele;
 
 import business.Client;
+import common.CommonVariables;
 
 import java.rmi.RemoteException;
 
@@ -16,7 +17,7 @@ public class Chrono extends Thread {
 
     public void run() {
         try {
-            sleep(10000);
+            sleep(CommonVariables.TEMPS_VENTE);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

@@ -9,6 +9,7 @@ import etats.ClientAttente;
 import etats.ClientParticipant;
 import etats.ClientTermine;
 import etats.EtatClient;
+import modele.Chrono;
 import modele.ItemClient;
 import modele.Utilisateur;
 import shared_interfaces.InterfaceAcheteur;
@@ -46,6 +47,7 @@ public class Client implements InterfaceAcheteur {
 
     private ItemClient itemCourant;
     private InterfaceServeurVente serveurVente;
+    private Chrono chrono;
 
 
     public static Client getInstance() {
@@ -59,6 +61,7 @@ public class Client implements InterfaceAcheteur {
     public Client() {
         this.etatCourant = etatAttente;
         this.essaiEtatString = "attente";
+        this.chrono = new Chrono(this);
 //        try {
 //
 //            Registry registry = LocateRegistry.getRegistry(CommonVariables.PORT);
@@ -178,16 +181,7 @@ public class Client implements InterfaceAcheteur {
      * Lancé a l'initialisation du client pour créer un timer sur la vente.
      */
     public void startChrono() {
-        try {
-            sleep(10000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        try {
-            temps_ecoule();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
+        chrono.start();
     }
 
 

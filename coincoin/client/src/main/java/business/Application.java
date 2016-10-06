@@ -1,9 +1,7 @@
 package business;
 
+import modele.ItemClient;
 import org.springframework.web.WebApplicationInitializer;
-import org.springframework.web.context.ContextLoader;
-import org.springframework.web.context.ContextLoaderListener;
-import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -14,11 +12,15 @@ import javax.servlet.ServletException;
  */
 public class Application implements WebApplicationInitializer {
 
+    /**
+     * classes are initialized here before the deployment of the server
+     * @param servletContext
+     * @throws ServletException
+     */
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
-        AnnotationConfigWebApplicationContext applicationContext = new AnnotationConfigWebApplicationContext();
-        applicationContext.register(Configuration.class);
-        ContextLoaderListener contextLoaderListener = new ContextLoaderListener(applicationContext);
-        servletContext.addListener(contextLoaderListener);
+        Client client = Client.getInstance();
+        client.setItemCourant(new ItemClient(50., "gros canard", "a l'odeur du pénis de Dennis"));
     }
+
 }

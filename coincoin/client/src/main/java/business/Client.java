@@ -1,26 +1,21 @@
 package business;
+
 import business.converters.ItemDTOToItemConverter;
 import business.converters.UtilisateurToUtilisateurDTOConverter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import common.CommonVariables;
 import data_transfert_objects.ItemDTO;
 import etats.ClientAttente;
 import etats.ClientParticipant;
 import etats.ClientTermine;
 import etats.EtatClient;
-import modele.Chrono;
 import modele.ItemClient;
 import modele.Utilisateur;
-import org.springframework.stereotype.Component;
 import shared_interfaces.InterfaceAcheteur;
 import shared_interfaces.InterfaceServeurVente;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,9 +23,13 @@ import static java.lang.Thread.sleep;
 
 /**
  * Created by Dennis on 27/09/16.
- *
+ * Is a singleton
  */
 public class Client implements InterfaceAcheteur {
+
+    //Singleton instance
+    private static Client instance;
+
     //constantes
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private static final Logger LOGGER = Logger.getAnonymousLogger();
@@ -48,23 +47,30 @@ public class Client implements InterfaceAcheteur {
     private InterfaceServeurVente serveurVente;
 
 
-    public Client(Utilisateur utilisateur) throws RemoteException {
-        this.utilisateur = utilisateur;
+    public static Client getInstance() {
+        if (instance == null) {
+            instance = new Client();
+        }
+
+        return instance;
+    }
+
+    public Client() {
         this.etatCourant = etatAttente;
         this.essaiEtatString = "attente";
-        try {
-
-            Registry registry = LocateRegistry.getRegistry(CommonVariables.PORT);
-
-            InterfaceServeurVente serveurVente = (InterfaceServeurVente) registry.lookup("connexion");
-
-            LOGGER.info(serveurVente.toString());
-
-            inscription();
-            startChrono();
-        } catch (Exception e) {
-            LOGGER.warning(e.getMessage());
-        }
+//        try {
+//
+//            Registry registry = LocateRegistry.getRegistry(CommonVariables.PORT);
+//
+//            InterfaceServeurVente serveurVente = (InterfaceServeurVente) registry.lookup("connexion");
+//
+//            LOGGER.info(serveurVente.toString());
+//
+//            inscription();
+//            startChrono();
+//        } catch (Exception e) {
+//            LOGGER.warning(e.getMessage());
+//        }
     }
 
     /**

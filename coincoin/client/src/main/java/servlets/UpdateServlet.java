@@ -5,7 +5,6 @@ import business.converters.ItemToItemDTOConverter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import common.CommonVariables;
 import modele.ItemClient;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,13 +19,11 @@ import java.io.IOException;
 @WebServlet(name = "upd", urlPatterns = "/update")
 public class UpdateServlet extends HttpServlet {
 
-    @Autowired
-    private Client client;
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("kikoo");
+        Client client = Client.getInstance();
         ItemClient itemClient = client.getItemCourant();
+
         ObjectMapper objectMapper = new ObjectMapper();
         resp.setContentType(CommonVariables.CONTENT_TYPE);
         String content = objectMapper.writeValueAsString(ItemToItemDTOConverter.convert(itemClient));

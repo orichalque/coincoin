@@ -1,7 +1,6 @@
 package etats;
 
 import business.Client;
-import business.converters.UtilisateurToUtilisateurDTOConverter;
 import modele.Utilisateur;
 import org.junit.After;
 import org.junit.Assert;
@@ -11,8 +10,6 @@ import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import shared_interfaces.InterfaceServeurVente;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by Dennis on 30/09/16.

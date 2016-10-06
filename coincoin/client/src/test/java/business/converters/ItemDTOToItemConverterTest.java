@@ -1,6 +1,5 @@
 package business.converters;
 
-import business.converters.ItemDTOToItemConverter;
 import data_transfert_objects.ItemDTO;
 import modele.ItemClient;
 import org.junit.Assert;

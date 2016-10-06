@@ -1,8 +1,8 @@
 package business.converters;
 
 import data_transfert_objects.ItemDTO;
-import model.ItemServer;
 import model.ItemEnAttente;
+import model.ItemServer;
 
 /**
  * Created by Thibault on 27/09/2016.

@@ -25,11 +25,12 @@ public class UpdateServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
         System.out.println("kikoo");
         ItemClient itemClient = client.getItemCourant();
         ObjectMapper objectMapper = new ObjectMapper();
         resp.setContentType(CommonVariables.CONTENT_TYPE);
-        resp.getWriter().write(objectMapper.writeValueAsString(ItemToItemDTOConverter.convert(itemClient)));
+        String content = objectMapper.writeValueAsString(ItemToItemDTOConverter.convert(itemClient));
+        System.out.println(content);
+        resp.getWriter().write(content);
     }
 }

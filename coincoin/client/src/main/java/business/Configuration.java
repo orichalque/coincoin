@@ -1,5 +1,6 @@
 package business;
 
+import modele.ItemClient;
 import org.springframework.context.annotation.Bean;
 
 import java.rmi.RemoteException;
@@ -14,6 +15,7 @@ public class Configuration {
         Client client = null;
         try {
             client = new Client(null);
+            client.setItemCourant(new ItemClient(50., "canard", "gros pénis"));
         } catch (RemoteException e) {
             e.printStackTrace();
             //FIXME

@@ -1,6 +1,8 @@
 package business;
 
 import org.springframework.web.WebApplicationInitializer;
+import org.springframework.web.context.ContextLoader;
+import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 
 import javax.servlet.ServletContext;
@@ -15,10 +17,8 @@ public class Application implements WebApplicationInitializer {
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         AnnotationConfigWebApplicationContext applicationContext = new AnnotationConfigWebApplicationContext();
-//        applicationContext.register(Configuration.class);
-//        Client client = (Client) applicationContext.getBean("client");
-
-        applicationContext.close();
+        applicationContext.register(Configuration.class);
+        ContextLoaderListener contextLoaderListener = new ContextLoaderListener(applicationContext);
+        servletContext.addListener(contextLoaderListener);
     }
-
 }

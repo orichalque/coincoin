@@ -29,7 +29,6 @@ public class UpdateServlet extends HttpServlet {
         ObjectMapper objectMapper = new ObjectMapper();
         resp.setContentType(CommonVariables.CONTENT_TYPE);
         String content = objectMapper.writeValueAsString(ItemToItemDTOConverter.convert(itemClient));
-        System.out.println(content);
         resp.getWriter().write(content);
     }
 }

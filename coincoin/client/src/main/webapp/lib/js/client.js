@@ -18,6 +18,8 @@ coincoinApp.controller('itemController', function itemController($scope, $http, 
     $scope.cx = "000337515704215858772:qphvdedtcsw"
 
     $scope.authentified = false;
+    $scope.subscribed = false;
+
     $scope.name;
     $scope.mail;
 
@@ -88,6 +90,19 @@ coincoinApp.controller('itemController', function itemController($scope, $http, 
         }).then(function success(response) {
             $scope.authentified = true;
             console.log("successfully logged");
+        }, function error(response) {
+            console.log(response.data);
+        });
+    }
+
+    $scope.subscribe = function() {
+        $http({
+            method : "POST",
+            url : "/subscribe",
+            params : {"nom":$scope.name, "mail":$scope.mail}
+        }).then(function success(response) {
+            $scope.subscribed = true;
+            console.log("inscription sended to the server");
         }, function error(response) {
             console.log(response.data);
         });

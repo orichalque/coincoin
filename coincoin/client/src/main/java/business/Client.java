@@ -17,9 +17,12 @@ import shared_interfaces.InterfaceAcheteur;
 import shared_interfaces.InterfaceServeurVente;
 
 import java.io.IOException;
+import java.rmi.AlreadyBoundException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,7 +30,7 @@ import java.util.logging.Logger;
  * Created by Dennis on 27/09/16.
  * Is a singleton
  */
-public class Client implements InterfaceAcheteur {
+public class Client extends UnicastRemoteObject implements InterfaceAcheteur{
 
     //Singleton instance
     private static Client instance;
@@ -53,7 +56,11 @@ public class Client implements InterfaceAcheteur {
 
     public static Client getInstance() {
         if (instance == null) {
-            instance = new Client();
+            try {
+                instance = new Client();
+            } catch (RemoteException e) {
+                LOGGER.log(Level.SEVERE, "Cannot instantiate the client", e);
+            }
         }
         return instance;
     }
@@ -62,22 +69,17 @@ public class Client implements InterfaceAcheteur {
      * Constructor for the Client
      * @PreCondition The server is running
      */
-    public Client() {
+    public Client() throws RemoteException {
+        super();
         this.etatCourant = etatAttente;
         this.essaiEtatString = "attente";
         this.chrono = new Chrono(this);
         try {
-
             Registry registry = LocateRegistry.getRegistry(CommonVariables.PORT);
-
             serveurVente = (InterfaceServeurVente) registry.lookup("serveur");
-
-            LOGGER.info(serveurVente.toString());
-
-            inscription();
             startChrono();
-        } catch (Exception e) {
-            LOGGER.warning(e.getMessage());
+        } catch (NotBoundException e) {
+            LOGGER.log(Level.SEVERE, "Cannot reach the distant server", e);
         }
     }
 
@@ -86,6 +88,7 @@ public class Client implements InterfaceAcheteur {
      * Utilisée par le serveur.
      * @param nouvelItemDTO nouvel item au format string
      */
+    @Override
     public void nouvelle_soumission(String nouvelItemDTO) {
         //1-Transformation du DTO en item et changement item
         itemCourant = getItemFromDTO(nouvelItemDTO);
@@ -103,6 +106,7 @@ public class Client implements InterfaceAcheteur {
      * Utilisée par le serveur.
      * @param nomAcheteur nouveau propriétaire de l'item
      */
+    @Override
     public void objet_vendu(String nomAcheteur) {
         //chgt etat
         essaiEtatString="attente";
@@ -116,6 +120,7 @@ public class Client implements InterfaceAcheteur {
      * Utilisée par le serveur.
      * @param prix nouveau prix
      */
+    @Override
     public void nouveau_prix(double prix) {
         itemCourant.setPrix(prix);
         //MAJ
@@ -162,11 +167,22 @@ public class Client implements InterfaceAcheteur {
      */
     public void inscription() throws RemoteException {
         try {
-            serveurVente.insc_acheteur(OBJECT_MAPPER.writeValueAsString(UtilisateurToUtilisateurDTOConverter.convert(utilisateur)));
+            Registry registry = LocateRegistry.getRegistry(CommonVariables.PORT);
+            LOGGER.info("Registry obtained");
+
+            String serializedUser = OBJECT_MAPPER.writeValueAsString(UtilisateurToUtilisateurDTOConverter.convert(utilisateur));
+            LOGGER.info(String.format("Binding %s to the rmi registry", utilisateur.getPseudo()));
+
+            registry.bind(utilisateur.getPseudo(), this);
+            LOGGER.info(String.format("Client %s bound to the registry", utilisateur.getPseudo()));
+
+            serveurVente.insc_acheteur(serializedUser);
         } catch (RemoteException e) {
             LOGGER.log(Level.WARNING, String.format("Cannot send the new user to the serveur"), e);
         } catch (JsonProcessingException e) {
             LOGGER.log(Level.WARNING, String.format("Cannot serialize the user "), e);
+        } catch (AlreadyBoundException e) {
+            LOGGER.log(Level.WARNING, String.format("The user is already bound in the registry"));
         }
     }
 

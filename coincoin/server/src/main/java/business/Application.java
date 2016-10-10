@@ -15,7 +15,14 @@ import java.util.logging.Logger;
  */
 public class Application {
 
-    private final static Logger LOGGER = Logger.getLogger("Server logs");
+    private static final Logger LOGGER = Logger.getLogger("Server logs");
+
+    /**
+     * Private constructor : this class must not be instanciated
+     */
+    private Application() {
+
+    }
 
     /**
      * Main class

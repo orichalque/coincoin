@@ -15,7 +15,10 @@ import shared_interfaces.InterfaceAcheteur;
 import shared_interfaces.InterfaceServeurVente;
 
 import java.io.IOException;
+import java.rmi.AccessException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -87,28 +90,30 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
      */
     @Override
     public synchronized void insc_acheteur(String acheteurAsString) {
-        LOGGER.info(String.format("Receiving an inscription request from an user"));
 
         UtilisateurServeur utilisateurServeur = getUtilisateurFromDTO(acheteurAsString);
 
-        //get user with rmi
-        //FIXME
-        InterfaceAcheteur interfaceAcheteur = null;
+        LOGGER.info(String.format("Receiving an inscription request from the user %s", utilisateurServeur.getNom()));
 
         try {
+            InterfaceAcheteur interfaceAcheteur = (InterfaceAcheteur) LocateRegistry.getRegistry(CommonVariables.PORT).lookup(utilisateurServeur.getNom());
             amountOfWaitingUsers++;
             LOGGER.info(String.format("Currently %s users waiting", amountOfWaitingUsers));
 
             //Make the user wait
             interfaceAcheteur.wait();
+
+            //Joining the Remote object with the user server-side in a Thread-safe list
+            interfaceAcheteurList.add(new InterfaceAcheteurWithUser(utilisateurServeur, interfaceAcheteur));
         } catch (InterruptedException e) {
             LOGGER.log(Level.WARNING, String.format("Cannot put the user %s in waiting state", utilisateurServeur.getNom()), e);
+        } catch (AccessException e) {
+            LOGGER.log(Level.WARNING, "The user can't call the distant server method", e);
+        } catch (RemoteException e) {
+            LOGGER.log(Level.WARNING, "Cannot access to the server", e);
+        } catch (NotBoundException e) {
+            LOGGER.log(Level.WARNING, "Cannot bind this user name", e);
         }
-
-        InterfaceAcheteurWithUser interfaceAcheteurWithUser = new InterfaceAcheteurWithUser(utilisateurServeur, null);
-
-        //adding the user
-        interfaceAcheteurList.add(interfaceAcheteurWithUser);
     }
 
     /**

@@ -58,6 +58,10 @@ public class Client implements InterfaceAcheteur {
         return instance;
     }
 
+    /**
+     * Constructor for the Client
+     * @PreCondition The server is running
+     */
     public Client() {
         this.etatCourant = etatAttente;
         this.essaiEtatString = "attente";
@@ -66,7 +70,7 @@ public class Client implements InterfaceAcheteur {
 
             Registry registry = LocateRegistry.getRegistry(CommonVariables.PORT);
 
-            InterfaceServeurVente serveurVente = (InterfaceServeurVente) registry.lookup("serveur");
+            serveurVente = (InterfaceServeurVente) registry.lookup("serveur");
 
             LOGGER.info(serveurVente.toString());
 

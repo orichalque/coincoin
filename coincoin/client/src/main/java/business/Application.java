@@ -1,6 +1,6 @@
 package business;
 
-import modele.ItemClient;
+
 import org.springframework.web.WebApplicationInitializer;
 
 import javax.servlet.ServletContext;
@@ -19,7 +19,7 @@ public class Application implements WebApplicationInitializer {
      */
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
-        Client client = Client.getInstance();
+        Client.getInstance();
     }
 
 }

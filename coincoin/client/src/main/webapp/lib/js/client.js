@@ -2,7 +2,7 @@
 /**
  * Angular app linked to <html> tag of index.html
  */
-var coincoinApp = angular.module('coincoinApp', []);
+var coincoinApp = angular.module('coincoinApp', ['ngAnimate']);
 
 /**
  * Angular controller linked to <body> tag of index.html
@@ -101,11 +101,11 @@ coincoinApp.controller('itemController', function itemController($scope, $http, 
             url : "/subscribe",
             params : {"nom":$scope.name, "mail":$scope.mail}
         }).then(function success(response) {
-            $scope.subscribed = true;
             console.log("inscription sended to the server");
         }, function error(response) {
             console.log(response.data);
         });
+        $scope.subscribed = true;
     }
 
 });

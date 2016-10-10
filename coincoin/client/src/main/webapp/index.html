@@ -20,6 +20,7 @@
     <![endif]-->
     <!-- AngularJS 1.0 -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+    <script src="https://code.angularjs.org/1.5.8/angular-animate.min.js"></script>
     <!-- Include angularJs file -->
     <script src="lib/js/client.js"></script>
 </head>
@@ -36,14 +37,32 @@
     </div>
 </nav>
 
-<div class="container mainContent">
-    <div class="col-md-12" ng-show="authentified">
+<div class="container mainContent" >
+    <div class="col-md-4 col-md-offset-4 fadeout" ng-show="!authentified">
+        <div class="panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title"><b>Authentification</b></h3>
+            </div>
+            <div class="panel-body">
+                <form novalidate>
+                    Nom: <input type="text" ng-model="name" required class="form-control">
+                    E-mail: <input type="text" ng-model="mail" required class="form-control">
+                </form>
+            </div>
+            <div class="panel-body">
+                <button ng-click="authentify()" class="btn btn-success">Authentification</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12 fadein" ng-show="authentified">
         <div class="col-md-6">
             <img class="border" src="{{img.link}}" alt="{{img.snippet}}" width="100%" height="100%">
             Image récuperée automatiquement sur Google Image.
         </div>
         <div class="col-md-6">
-            <div class="panel panel-primary" ng-show="suscribed">
+            <!-- subscribed condition grisé -->
+            <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h3 class="panel-title">Vente en cours: <b>{{item.nom}}</b></h3>
                 </div>
@@ -62,7 +81,10 @@
                             <div class="col-md-4">
                                 <input ng-model="prixPropose" type="number" min="{{prixActuel + 1}}" required class="form-control" id="enchere">
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4 fadeout" ng-show="!subscribed">
+                                <button type="button" class="btn btn-secondary">Inscription requise</button>
+                            </div>
+                            <div class="col-md-4 fadein" ng-show="subscribed">
                                 <button ng-click="changerPrix()" type="button" class="btn btn-success">Encherir</button>
                             </div>
                         </div>
@@ -75,28 +97,13 @@
                     </div>
                 </div>
             </div>
-            <div class="panel panel-primary" ng-show="!subscribed">
-                <div class="form-group">
-                    <button ng-click="subscribe()" type="button" class="btn btn-success">S'inscrire</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-12" ng-show="!authentified">
-        <div class="panel-primary">
-            <div class="panel-heading">
-                <h3 class="panel-title"><b>Authentification</b></h3>
-            </div>
-            <div class="panel-body">
-                <form novalidate>
-                    Nom: <input type="text" ng-model="name" required class="form-control">
-                    E-mail: <input type="text" ng-model="mail" required class="form-control">
-                    <button ng-click="authentify()" class="btn btn-success">Authentification</button>
-                </form>
+            <div class="form-group fadeout" ng-show="!subscribed">
+                <button ng-click="subscribe()" type="button" class="btn btn-success">S'inscrire</button>
             </div>
         </div>
     </div>
 </div>
+
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->

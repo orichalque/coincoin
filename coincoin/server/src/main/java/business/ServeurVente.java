@@ -78,6 +78,7 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
 
             currentItem = repository.getRandomItem();
 
+            LOGGER.info("Sell initiating");
             initiateSell();
 
             while (! interfaceAcheteurList.isEmpty()) { }
@@ -101,8 +102,9 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
             LOGGER.info(String.format("Currently %s users waiting", amountOfWaitingUsers));
 
             //Make the user wait
-            interfaceAcheteur.wait();
+            wait();
 
+            LOGGER.info("User added");
             //Joining the Remote object with the user server-side in a Thread-safe list
             interfaceAcheteurList.add(new InterfaceAcheteurWithUser(utilisateurServeur, interfaceAcheteur));
         } catch (InterruptedException e) {
@@ -168,11 +170,14 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
     public synchronized void initiateSell() {
         notifyAll();
 
-        //FIXME sending nouvelle soumission right after adding them may be bad
+        LOGGER.info("Threads notified");
+
+        //FIXME sending nouvelle soumission right after adding them wont work
         amountOfWaitingUsers = 0;
 
         interfaceAcheteurList.forEach(interfaceAcheteurWithUser -> {
             try {
+                LOGGER.info(String.format("%s notified", interfaceAcheteurWithUser.getUtilisateurServeur().getNom()));
                 interfaceAcheteurWithUser.getInterfaceAcheteur().nouvelle_soumission(OBJECT_MAPPER.writeValueAsString(ItemToItemDTOConverter.convert(currentItem)));
             } catch (RemoteException e) {
                 LOGGER.log(Level.WARNING, String.format("Cannot send the new item to the user %s", interfaceAcheteurWithUser.getUtilisateurServeur().getNom()), e);

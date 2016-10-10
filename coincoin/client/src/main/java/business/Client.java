@@ -77,7 +77,7 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur{
         try {
             Registry registry = LocateRegistry.getRegistry(CommonVariables.PORT);
             serveurVente = (InterfaceServeurVente) registry.lookup("serveur");
-            startChrono();
+            //startChrono();
         } catch (NotBoundException e) {
             LOGGER.log(Level.SEVERE, "Cannot reach the distant server", e);
         }
@@ -90,8 +90,12 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur{
      */
     @Override
     public void nouvelle_soumission(String nouvelItemDTO) {
-        //1-Transformation du DTO en item et changement item
+
         itemCourant = getItemFromDTO(nouvelItemDTO);
+
+        LOGGER.info(String.format("Receiving a new submission: %s", itemCourant.getNom()));
+        //1-Transformation du DTO en item et changement item
+
         //2- MAJ IHM?
 
         //3- changer l'etatCourant en participant

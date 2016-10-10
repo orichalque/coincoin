@@ -117,7 +117,11 @@ public class Client implements InterfaceAcheteur {
      * @param prix nouveau prix
      */
     public void nouveau_prix(double prix) {
-        itemCourant.setPrix(prix);
+        if (itemCourant != null) {
+            itemCourant.setPrix(prix);
+        } else {
+            itemCourant = new ItemClient(prix, "erreur init", "erreur init");
+        }
         //MAJ
 
     }

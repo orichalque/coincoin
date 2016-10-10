@@ -43,7 +43,7 @@
             Image récuperée automatiquement sur Google Image.
         </div>
         <div class="col-md-6">
-            <div class="panel panel-primary">
+            <div class="panel panel-primary" ng-show="suscribed">
                 <div class="panel-heading">
                     <h3 class="panel-title">Vente en cours: <b>{{item.nom}}</b></h3>
                 </div>
@@ -73,6 +73,11 @@
                             <i>{{item.description}}</i>
                         </p>
                     </div>
+                </div>
+            </div>
+            <div ng-show="!subscribed">
+                <div class="form-group">
+                    <button ng-click="subscribe()" type="button" class="btn btn-success">S'inscrire</button>
                 </div>
             </div>
         </div>

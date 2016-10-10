@@ -23,8 +23,6 @@ import java.rmi.registry.Registry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static java.lang.Thread.sleep;
-
 /**
  * Created by Dennis on 27/09/16.
  * Is a singleton
@@ -57,7 +55,6 @@ public class Client implements InterfaceAcheteur {
         if (instance == null) {
             instance = new Client();
         }
-
         return instance;
     }
 

@@ -12,22 +12,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 /**
  * Created by Thibault on 05/10/16.
  * Servlet used to update the item. Called every 3 seconds by the web app
  */
-@WebServlet(name = "upd", urlPatterns = "/update")
-public class UpdateServlet extends HttpServlet {
+@WebServlet(name = "sub", urlPatterns = "/subscribe")
+public class SubscribeServlet extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Client client = Client.getInstance();
-        ItemClient itemClient = client.getItemCourant();
+        client.inscription();
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        resp.setContentType(CommonVariables.CONTENT_TYPE);
-        String content = objectMapper.writeValueAsString(ItemToItemDTOConverter.convert(itemClient));
-        resp.getWriter().write(content);
     }
 }

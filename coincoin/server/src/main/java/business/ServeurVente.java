@@ -89,7 +89,7 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
     public synchronized void insc_acheteur(String acheteurAsString) {
         UtilisateurServeur utilisateurServeur = getUtilisateurFromDTO(acheteurAsString);
 
-        LOGGER.info(String.format("Receiving a incrementation request from the user %s", utilisateurServeur.getNom()));
+        LOGGER.info(String.format("Receiving an inscription request from the user %s", utilisateurServeur.getNom()));
 
         //get user with rmi
         //FIXME

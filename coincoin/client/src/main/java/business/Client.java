@@ -4,6 +4,7 @@ import business.converters.ItemDTOToItemConverter;
 import business.converters.UtilisateurToUtilisateurDTOConverter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import common.CommonVariables;
 import data_transfert_objects.ItemDTO;
 import etats.ClientAttente;
 import etats.ClientParticipant;
@@ -17,6 +18,8 @@ import shared_interfaces.InterfaceServeurVente;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -62,19 +65,19 @@ public class Client implements InterfaceAcheteur {
         this.etatCourant = etatAttente;
         this.essaiEtatString = "attente";
         this.chrono = new Chrono(this);
-//        try {
-//
-//            Registry registry = LocateRegistry.getRegistry(CommonVariables.PORT);
-//
-//            InterfaceServeurVente serveurVente = (InterfaceServeurVente) registry.lookup("connexion");
-//
-//            LOGGER.info(serveurVente.toString());
-//
-//            inscription();
-//            startChrono();
-//        } catch (Exception e) {
-//            LOGGER.warning(e.getMessage());
-//        }
+        try {
+
+            Registry registry = LocateRegistry.getRegistry(CommonVariables.PORT);
+
+            InterfaceServeurVente serveurVente = (InterfaceServeurVente) registry.lookup("serveur");
+
+            LOGGER.info(serveurVente.toString());
+
+            inscription();
+            startChrono();
+        } catch (Exception e) {
+            LOGGER.warning(e.getMessage());
+        }
     }
 
     /**

@@ -44,12 +44,11 @@ coincoinApp.controller('itemController', function ($scope, $http, $interval, $lo
             var parameters = {
                 nom:$scope.item.nom,
                 newPrice:$scope.prixPropose
-            }
+            };
             $http({
                 method: "POST",
                 url: $scope.domaine+"/bid",
                 params: parameters
-
             }).then(function () {
                 $scope.prixActuel = $scope.prixPropose;
             }, function () {

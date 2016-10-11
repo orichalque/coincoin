@@ -71,7 +71,7 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
         saleOver = true;
         //Infinite loop
         while (! isOver) {
-            LOGGER.log(Level.INFO, "debut d'une vente");
+
             currentItem = repository.getRandomItem();
 
             if (interfaceAcheteurListInscris.size() >= CommonVariables.AMOUNT_OF_USERS) {

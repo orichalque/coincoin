@@ -11,7 +11,8 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 /**
- * Created by E104607D on 04/10/16.
+ * Created by Thibault & Dennis on 04/10/16.
+ * Bid on the current item
  */
 @WebServlet(name = "bid", urlPatterns = "/bid")
 public class BidServlet extends HttpServlet {
@@ -22,7 +23,7 @@ public class BidServlet extends HttpServlet {
         //var parameters = {nom:$scope.item.nom,newPrice:$scope.prixPropose}
 
         //call client that call the server
-        Client c = Client.getInstance();
+        Client client = Client.getInstance();
 
         LOGGER.info("req");
         float newPrice;
@@ -31,12 +32,12 @@ public class BidServlet extends HttpServlet {
         if (newStringPrice != null) {
             LOGGER.info(nomObjet);
             LOGGER.info(newStringPrice);
-            if (c.getItemCourant() != null) {
-                if (nomObjet.equals(c.getItemCourant().getNom())) {
+            if (client.getItemCourant() != null) {
+                if (nomObjet.equals(client.getItemCourant().getNom())) {
                     newPrice = Float.parseFloat(newStringPrice);
                     //Attention il faut que l'item soit non nul
                     //TODO initialisation objet à la connexion
-                    c.nouveau_prix(newPrice);
+                    client.nouveau_prix(newPrice);
                 } else {
                     resp.sendError(304);
                     return;

@@ -31,24 +31,26 @@ public class BidServlet extends HttpServlet {
         if (newStringPrice != null) {
             LOGGER.info(nomObjet);
             LOGGER.info(newStringPrice);
-            newPrice = Float.parseFloat(newStringPrice);
-
-            //Attention il faut que l'item soit non nul
-            //TODO initialisation objet à la connexion
-            //TODO comparer le nom de l'objet à l'objet courant pour éviter des erreurs
-            c.nouveau_prix(newPrice);
+            if (c.getItemCourant() != null) {
+                if (nomObjet.equals(c.getItemCourant().getNom())) {
+                    newPrice = Float.parseFloat(newStringPrice);
+                    //Attention il faut que l'item soit non nul
+                    //TODO initialisation objet à la connexion
+                    c.nouveau_prix(newPrice);
+                } else {
+                    resp.sendError(304);
+                    return;
+                }
+            } else {
+                resp.sendError(400);//BAD REQUEST
+                return;
+            }
         }
 
-
-        //TODO put response in the httpServletResponse
-
         //1 erreur nom objet => 304 Not Modified
-        //resp.sendError(304);
         //2 ok => 200
         resp.setStatus(HttpServletResponse.SC_OK);
     }
-
-
 
 
 }

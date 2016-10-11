@@ -70,7 +70,6 @@ coincoinApp.controller('itemController', function ($scope, $http, $interval, $lo
                 url : $scope.domaine+"/update"
             }).then(function (response) {
                 if ((response.data != "") && ($scope.isItemEmpty() || (response.data.nom != $scope.item.nom))){
-                    console.log("Mise a jour de l'ihm");
                     $scope.item = response.data;
                     $scope.prixActuel = $scope.isItemEmpty()?0:$scope.item.prix;
                     $scope.prixPropose = $scope.prixActuel + 1;
@@ -84,6 +83,11 @@ coincoinApp.controller('itemController', function ($scope, $http, $interval, $lo
                     }, function (response) {
                         $scope.data = response.statusText;
                     });
+                }
+                if ((response.data != "") && (response.data.nom == $scope.item.nom) && ($scope.item.prix != response.data.prix)){
+                    $scope.item.prix = response.data.prix;
+                    $scope.prixActuel = $scope.item.prix;
+                    $scope.prixPropose = $scope.prixActuel + 1;
                 }
             }, function () {
             });

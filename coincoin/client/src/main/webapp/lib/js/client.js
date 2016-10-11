@@ -40,19 +40,20 @@ coincoinApp.controller('itemController', function ($scope, $http, $interval, $lo
      * Used to change the price of the item
      */
     $scope.changerPrix = function() {
-        if (($scope.prixPropose > $scope.prixActuel) && !$scope.isItemEmpty) {
+        if (($scope.prixPropose > $scope.prixActuel) && !$scope.isItemEmpty()) {
             var parameters = {
                 nom:$scope.item.nom,
                 newPrice:$scope.prixPropose
-            }
+            };
             $http({
                 method: "POST",
                 url: $scope.domaine+"/bid",
                 params: parameters
 
             }).then(function () {
-                $scope.prixActuel = $scope.prixPropose;
+                console.log("post ok");
             }, function () {
+                console.error("erreur de post...")
             });
         }
     };

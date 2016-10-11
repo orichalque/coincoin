@@ -70,11 +70,12 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
         saleOver = false;
         //Infinite loop
         while (! isOver) {
-
+            LOGGER.log(Level.INFO, "debut d'une vente");
             currentItem = repository.getRandomItem();
 
             initiateSell();
-            while (!interfaceAcheteurList.isEmpty() && saleOver) { }
+            while (!interfaceAcheteurList.isEmpty() && !saleOver) {
+            }
         }
     }
 
@@ -149,8 +150,11 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
         interfaceAcheteurList.removeIf(interfaceAcheteurWithUser ->
                 interfaceAcheteurWithUser.getUtilisateurServeur().getNom().equals(utilisateurServeur.getNom()));
 
+
         if (interfaceAcheteurList.isEmpty()) {
             saleOver = true;
+        } else {
+            LOGGER.log(Level.INFO, "encore " + interfaceAcheteurList.size() + " clients");
         }
     }
 

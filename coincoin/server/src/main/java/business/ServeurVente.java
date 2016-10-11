@@ -73,8 +73,12 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
 
             currentItem = repository.getRandomItem();
 
-            initiateSell();
-            while (!interfaceAcheteurList.isEmpty() && saleOver) { }
+            if (amountOfWaitingUsers >= CommonVariables.AMOUNT_OF_USERS) {
+                LOGGER.info(String.format("Vente de l'objet %s démarrée", currentItem.getNom()));
+                initiateSell();
+            }
+
+            while (!interfaceAcheteurList.isEmpty() && !saleOver) { }
         }
     }
 
@@ -150,6 +154,7 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
                 interfaceAcheteurWithUser.getUtilisateurServeur().getNom().equals(utilisateurServeur.getNom()));
 
         if (interfaceAcheteurList.isEmpty()) {
+            LOGGER.info("La liste des acheteurs est vide. LA vente actuelle est terminée");
             saleOver = true;
         }
     }

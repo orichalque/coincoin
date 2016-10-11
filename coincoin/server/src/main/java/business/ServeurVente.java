@@ -79,7 +79,9 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
                 initiateSell();
             }
 
-            while (!interfaceAcheteurListSale.isEmpty() || !saleOver) { }
+            while (!interfaceAcheteurListSale.isEmpty() || !saleOver) {
+            }
+
         }
     }
 
@@ -154,8 +156,10 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
         interfaceAcheteurListSale.removeIf(interfaceAcheteurWithUser ->
                 interfaceAcheteurWithUser.getUtilisateurServeur().getNom().equals(utilisateurServeur.getNom()));
 
+
         if (interfaceAcheteurListSale.isEmpty()) {
             LOGGER.info("La liste des acheteurs est vide. LA vente actuelle est terminée");
+
             saleOver = true;
         }
     }
@@ -182,7 +186,7 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
 
         //FIXME sending nouvelle soumission right after adding them wont work
         saleOver = false;
-        if (! interfaceAcheteurListInscris.isEmpty()) {
+        if (!interfaceAcheteurListInscris.isEmpty()) {
 
             LOGGER.info("Notifying users");
             amountOfWaitingUsers = 0;

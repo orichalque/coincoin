@@ -49,7 +49,6 @@ coincoinApp.controller('itemController', function ($scope, $http, $interval, $lo
                 method: "POST",
                 url: $scope.domaine+"/bid",
                 params: parameters
-
             }).then(function () {
                 console.log("post ok");
             }, function () {

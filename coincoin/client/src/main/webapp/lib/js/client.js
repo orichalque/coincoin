@@ -7,7 +7,7 @@ var coincoinApp = angular.module('coincoinApp', ['ngAnimate']);
 /**
  * Angular controller linked to <body> tag of index.html
  */
-coincoinApp.controller('itemController', function itemController($scope, $http, $interval) {
+coincoinApp.controller('itemController', function ($scope, $http, $interval, $location) {
 
     /**
      *
@@ -22,6 +22,7 @@ coincoinApp.controller('itemController', function itemController($scope, $http, 
 
     $scope.name;
     $scope.mail;
+    $scope.domaine = $location.protocol() + "://" + $location.host() + ":" + $location.port();
 
     $scope.item =
     {
@@ -36,10 +37,10 @@ coincoinApp.controller('itemController', function itemController($scope, $http, 
     $http({
         method : "GET",
         url : $scope.requestUrl
-    }).then(function mySucces(response) {
+    }).then(function (response) {
         $scope.data = response.data;
         $scope.img =  $scope.data.items[0];
-    }, function myError(response) {
+    }, function (response) {
         $scope.data = response.statusText;
     });
 
@@ -51,13 +52,12 @@ coincoinApp.controller('itemController', function itemController($scope, $http, 
             var parameters = {nom:$scope.item.nom,newPrice:$scope.prixPropose}
             $http({
                 method: "POST",
-                url: "/bid",
+                url: $scope.domaine+"/bid",
                 params: parameters
 
-            }).then(function mySucces(response) {
+            }).then(function () {
                 $scope.prixActuel = $scope.prixPropose;
-            }, function myError(response) {
-                console.log(response.data);
+            }, function () {
             });
         }
     };
@@ -72,12 +72,10 @@ coincoinApp.controller('itemController', function itemController($scope, $http, 
         if ($scope.authentified) {
             $http({
                 method : "GET",
-                url : "/update"
-            }).then(function mySucces(response) {
+                url : $scope.domaine+"/update"
+            }).then(function (response) {
                 $scope.data = response.data;
-                console.log(response.data);
-            }, function myError(response) {
-                console.log(response.data);
+            }, function () {
             });
         }
     }
@@ -85,25 +83,21 @@ coincoinApp.controller('itemController', function itemController($scope, $http, 
     $scope.authentify = function() {
         $http({
             method : "POST",
-            url : "/authentify",
+            url : $scope.domaine+"/authentify",
             params : {"nom":$scope.name, "mail":$scope.mail}
-        }).then(function success(response) {
+        }).then(function () {
             $scope.authentified = true;
-            console.log("successfully logged");
-        }, function error(response) {
-            console.log(response.data);
+        }, function () {
         });
     }
 
     $scope.subscribe = function() {
         $http({
             method : "POST",
-            url : "/subscribe",
+            url : $scope.domaine+"/subscribe",
             params : {"nom":$scope.name, "mail":$scope.mail}
-        }).then(function success(response) {
-            console.log("inscription sended to the server");
-        }, function error(response) {
-            console.log(response.data);
+        }).then(function () {
+        }, function () {
         });
         $scope.subscribed = true;
     }

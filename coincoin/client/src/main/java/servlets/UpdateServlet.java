@@ -22,12 +22,12 @@ public class UpdateServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        /*Client client = Client.getInstance();
+        Client client = Client.getInstance();
         ItemClient itemClient = client.getItemCourant();
 
         ObjectMapper objectMapper = new ObjectMapper();
         resp.setContentType(CommonVariables.CONTENT_TYPE);
         String content = objectMapper.writeValueAsString(ItemToItemDTOConverter.convert(itemClient));
-        resp.getWriter().write(content); */
+        resp.getWriter().write(content);
     }
 }

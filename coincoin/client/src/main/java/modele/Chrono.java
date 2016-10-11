@@ -4,27 +4,26 @@ import business.Client;
 import common.CommonVariables;
 
 import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by Dennis on 27/09/16.
  */
 public class Chrono extends Thread {
-    private Client client;
+    private static final Logger LOGGER = Logger.getAnonymousLogger();
 
-    public Chrono(Client client) {
-        this.client = client;
-    }
-
+    @Override
     public void run() {
         try {
             sleep(CommonVariables.TEMPS_VENTE);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.INFO, "fin du chrono", e);
         }
         try {
-            client.temps_ecoule();
+            Client.getInstance().temps_ecoule();
         } catch (RemoteException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.WARNING, "Remote, temps ecoule chrono", e);
         }
     }
 }

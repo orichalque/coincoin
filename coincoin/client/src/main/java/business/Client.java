@@ -216,6 +216,7 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur{
         etatCourant = etatTermine;
         try {
             serveurVente.tempsEcoule(OBJECT_MAPPER.writeValueAsString(UtilisateurToUtilisateurDTOConverter.convert(utilisateur)));
+            itemCourant = null;
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

@@ -71,6 +71,7 @@ coincoinApp.controller('itemController', function ($scope, $http, $interval, $lo
             }).then(function (response) {
                 $scope.data = response.data;
                 if (response.data != null && ($scope.isItemEmpty() || (response.data.name != $scope.item.name))){
+                    console.log("Mise a jour de l'ihm");
                     $scope.item = response.data;
                     $scope.prixActuel = $scope.isItemEmpty()?0:$scope.item.prix;
                     $scope.prixPropose = $scope.prixActuel + 1;

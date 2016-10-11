@@ -41,6 +41,9 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
     private List<InterfaceAcheteurWithUser> interfaceAcheteurList;
     private UtilisateurServeur currentWinner;
 
+    //true if the sale is actually over. False otherwise
+    private boolean saleOver;
+
     //Ensure that the value is the same for every thread
     private volatile int amountOfWaitingUsers;
 
@@ -64,24 +67,14 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
      */
     public void run() {
         boolean isOver = false;
-
+        saleOver = false;
         //Infinite loop
         while (! isOver) {
 
-            while (amountOfWaitingUsers < CommonVariables.AMOUNT_OF_USERS) {
-                try {
-                    Thread.sleep(CommonVariables.MILLIS_TO_WAIT_BETWEEN_CHECKS);
-                } catch (InterruptedException e) {
-                    LOGGER.log(Level.WARNING, "Unexpected error while waiting for users", e);
-                }
-            }
-
             currentItem = repository.getRandomItem();
 
-            LOGGER.info("Sell initiating");
             initiateSell();
-
-            while (! interfaceAcheteurList.isEmpty()) { }
+            while (!interfaceAcheteurList.isEmpty() && saleOver) { }
         }
     }
 
@@ -96,26 +89,33 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
 
         LOGGER.info(String.format("Receiving an inscription request from the user %s", utilisateurServeur.getNom()));
 
+        InterfaceAcheteur interfaceAcheteur = null;
         try {
-            InterfaceAcheteur interfaceAcheteur = (InterfaceAcheteur) LocateRegistry.getRegistry(CommonVariables.PORT).lookup(utilisateurServeur.getNom());
-            amountOfWaitingUsers++;
-            LOGGER.info(String.format("Currently %s users waiting", amountOfWaitingUsers));
 
-            //Make the user wait
-            wait();
+            interfaceAcheteur = (InterfaceAcheteur) LocateRegistry.getRegistry(CommonVariables.PORT).lookup(utilisateurServeur.getNom());
 
-            LOGGER.info("User added");
-            //Joining the Remote object with the user server-side in a Thread-safe list
-            interfaceAcheteurList.add(new InterfaceAcheteurWithUser(utilisateurServeur, interfaceAcheteur));
-        } catch (InterruptedException e) {
-            LOGGER.log(Level.WARNING, String.format("Cannot put the user %s in waiting state", utilisateurServeur.getNom()), e);
-        } catch (AccessException e) {
-            LOGGER.log(Level.WARNING, "The user can't call the distant server method", e);
         } catch (RemoteException e) {
-            LOGGER.log(Level.WARNING, "Cannot access to the server", e);
+            LOGGER.log(Level.WARNING, "Remote exception throwed when fetching user", e);
         } catch (NotBoundException e) {
-            LOGGER.log(Level.WARNING, "Cannot bind this user name", e);
+            LOGGER.log(Level.WARNING, "The user does not exist", e);
         }
+
+        amountOfWaitingUsers++;
+        LOGGER.info(String.format("Currently %s users waiting", amountOfWaitingUsers));
+
+        while (amountOfWaitingUsers < CommonVariables.AMOUNT_OF_USERS) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                LOGGER.log(Level.INFO, "Waiting interrupted", e);
+            }
+        }
+        //Make the user wait
+
+        LOGGER.info("User added");
+        //Joining the Remote object with the user server-side in a Thread-safe list
+        interfaceAcheteurList.add(new InterfaceAcheteurWithUser(utilisateurServeur, interfaceAcheteur));
+
     }
 
     /**
@@ -148,6 +148,10 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
         //remove the buyer to the user's list
         interfaceAcheteurList.removeIf(interfaceAcheteurWithUser ->
                 interfaceAcheteurWithUser.getUtilisateurServeur().getNom().equals(utilisateurServeur.getNom()));
+
+        if (interfaceAcheteurList.isEmpty()) {
+            saleOver = true;
+        }
     }
 
     /**
@@ -170,22 +174,24 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
     public synchronized void initiateSell() {
         notifyAll();
 
-        LOGGER.info("Threads notified");
-
         //FIXME sending nouvelle soumission right after adding them wont work
-        amountOfWaitingUsers = 0;
+        saleOver = false;
+        if (! interfaceAcheteurList.isEmpty()) {
 
-        interfaceAcheteurList.forEach(interfaceAcheteurWithUser -> {
-            try {
-                LOGGER.info(String.format("%s notified", interfaceAcheteurWithUser.getUtilisateurServeur().getNom()));
-                interfaceAcheteurWithUser.getInterfaceAcheteur().nouvelle_soumission(OBJECT_MAPPER.writeValueAsString(ItemToItemDTOConverter.convert(currentItem)));
-            } catch (RemoteException e) {
-                LOGGER.log(Level.WARNING, String.format("Cannot send the new item to the user %s", interfaceAcheteurWithUser.getUtilisateurServeur().getNom()), e);
-            } catch (JsonProcessingException e) {
-                LOGGER.log(Level.WARNING, String.format("Cannot serialize the item %s", currentItem.getNom()), e);
-            }
-        });
+            LOGGER.info("Notifying users");
+            amountOfWaitingUsers = 0;
 
+            interfaceAcheteurList.forEach(interfaceAcheteurWithUser -> {
+                try {
+                    LOGGER.info(String.format("%s notified", interfaceAcheteurWithUser.getUtilisateurServeur().getNom()));
+                    interfaceAcheteurWithUser.getInterfaceAcheteur().nouvelle_soumission(OBJECT_MAPPER.writeValueAsString(ItemToItemDTOConverter.convert(currentItem)));
+                } catch (RemoteException e) {
+                    LOGGER.log(Level.WARNING, String.format("Cannot send the new item to the user %s", interfaceAcheteurWithUser.getUtilisateurServeur().getNom()), e);
+                } catch (JsonProcessingException e) {
+                    LOGGER.log(Level.WARNING, String.format("Cannot serialize the item %s", currentItem.getNom()), e);
+                }
+            });
+        }
     }
 
     /**

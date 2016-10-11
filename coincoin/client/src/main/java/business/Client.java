@@ -101,7 +101,7 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur{
         //3- changer l'etatCourant en participant
         essaiEtatString="participant";
         etatCourant=etatParticipant;
-        startChrono();
+//        startChrono();
     }
 
 

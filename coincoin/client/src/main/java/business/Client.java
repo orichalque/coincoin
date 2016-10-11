@@ -73,7 +73,7 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur{
         super();
         this.etatCourant = etatAttente;
         this.essaiEtatString = "attente";
-        this.chrono = new Chrono(this);
+        this.chrono = new Chrono();
         try {
             Registry registry = LocateRegistry.getRegistry(CommonVariables.PORT);
             serveurVente = (InterfaceServeurVente) registry.lookup("serveur");
@@ -164,7 +164,7 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur{
         if (prix > itemCourant.getPrix()) {
             etatCourant.rencherir(prix);
         }else{
-            LOGGER.info("prix trop bas");
+            LOGGER.log(Level.INFO, "prix trop bas");
         }
     }
 

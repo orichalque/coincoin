@@ -23,7 +23,7 @@ public class ChronoTest {
     @Before
     public void setUp() throws Exception {
         client = Mockito.mock(Client.class);
-        chrono = new Chrono(client);
+        chrono = new Chrono();
 
     }
 

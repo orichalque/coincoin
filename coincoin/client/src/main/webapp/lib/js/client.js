@@ -24,13 +24,13 @@ coincoinApp.controller('itemController', function ($scope, $http, $interval, $lo
     $scope.mail;
     $scope.domaine = $location.protocol() + "://" + $location.host() + ":" + $location.port();
 
-    $scope.item = null;
+    $scope.item = "";
 
     /**
      * Control of the item
      */
     $scope.isItemEmpty = function() {
-        return ( $scope.item == null );
+        return ( $scope.item == "" );
     }
 
     $scope.prixActuel = $scope.isItemEmpty()?0:$scope.item.prix;
@@ -69,7 +69,7 @@ coincoinApp.controller('itemController', function ($scope, $http, $interval, $lo
                 method : "GET",
                 url : $scope.domaine+"/update"
             }).then(function (response) {
-                if (response.data != null && response.data.name != "" && ($scope.isItemEmpty() || (response.data.name != $scope.item.name))){
+                if ((response.data != "") && ($scope.isItemEmpty() || (response.data.name != $scope.item.name))){
                     console.log("Mise a jour de l'ihm");
                     $scope.item = response.data;
                     $scope.prixActuel = $scope.isItemEmpty()?0:$scope.item.prix;

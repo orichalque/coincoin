@@ -25,13 +25,7 @@ coincoinApp.controller('itemController', function ($scope, $http, $interval, $lo
     $scope.domaine = $location.protocol() + "://" + $location.host() + ":" + $location.port();
 
     $scope.item = null;
-        /*
-    {
-        "nom": "Magnifique canard",
-        "description": "Un magnifique canard idéal pour commencer une collection de canards (vivants). Volaille en très bon état. aucune plume manquante ! cause : Décès du proprietaire.",
-        "prix": 120
-    };
-       */
+
     /**
      * Control of the item
      */
@@ -76,22 +70,20 @@ coincoinApp.controller('itemController', function ($scope, $http, $interval, $lo
                 url : $scope.domaine+"/update"
             }).then(function (response) {
                 $scope.data = response.data;
-                if (response.data != null) {
-                    if ($scope.isItemEmpty() || (response.data.name != scope.item.name)){
-                        $scope.item = response.data;
-
-                        $scope.requestUrl = $scope.isItemEmpty()?"":"https://www.googleapis.com/customsearch/v1?key="+$scope.keyapi+"&cx="+$scope.cx+"&q="+$scope.item.nom+"&searchType=image&num=1";
-                        $http({
-                            method: "GET",
-                            url: $scope.requestUrl
-                        }).then(function (response) {
-                            $scope.data = response.data;
-                            $scope.img = $scope.data.items[0];
-                        }, function (response) {
-                            $scope.data = response.statusText;
-                        });
-
-                    }
+                if (response.data != null && ($scope.isItemEmpty() || (response.data.name != scope.item.name))){
+                    $scope.item = response.data;
+                    $scope.prixActuel = $scope.isItemEmpty()?0:$scope.item.prix;
+                    $scope.prixPropose = $scope.prixActuel + 1;
+                    $scope.requestUrl = $scope.isItemEmpty()?"":"https://www.googleapis.com/customsearch/v1?key="+$scope.keyapi+"&cx="+$scope.cx+"&q="+$scope.item.nom+"&searchType=image&num=1";
+                    $http({
+                        method: "GET",
+                        url: $scope.requestUrl
+                    }).then(function (response) {
+                        $scope.data = response.data;
+                        $scope.img = $scope.data.items[0];
+                    }, function (response) {
+                        $scope.data = response.statusText;
+                    });
                 }
             }, function () {
             });

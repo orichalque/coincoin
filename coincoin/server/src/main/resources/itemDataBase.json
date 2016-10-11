@@ -1,13 +1,37 @@
 [
   {
     "prix": 52.2,
-    "nom": "canard",
-    "description": "un gros canard"
+    "nom": "Canard domestique",
+    "description": "Un beau canard blanc. Fraîchement sevré."
   },
   {
     "prix": 59.2,
-    "nom": "canard colvert",
-    "description": "un beau canard"
+    "nom": "Canard colvert",
+    "description": "Le Canard colvert (Anas platyrhynchos), ou Canard mallard au Canada, est une espèce d'oiseaux de l'ordre des Ansériformes, de la famille des Anatidés et de la sous-famille des Anatinés. C'est certainement le plus connu et reconnaissable de tous les canards, du fait de l'existence de races de canards domestiques issues de cette espèce."
+  },
+  {
+    "prix": 62.4,
+    "nom": "Canard huppé",
+    "description": "Un canard au pelage gris, huppé."
+  },
+  {
+    "prix": 159.2,
+    "nom": "Canard mandarin",
+    "description": "Un somptueux animal au pelage très coloré. Amical et oisif. "
+  },
+  {
+    "prix": 1952.1,
+    "nom": "Canard préhistorique",
+    "description": "Canard cloné à partir d'ADN issu d'ambre préhistorique. Unique, le point fort de toute collection de canards vivants. "
+  },
+  {
+    "prix": 852.0,
+    "nom": "Canarticho",
+    "description": "Le fameux pokémon. Il tient un poireau et n'a rien à voir avec les artichauds."
+  },
+  {
+  "prix": 25.2,
+  "nom": "Pénis de canard",
+  "description": "C'est le nom de ce reproducteur hors du commun"
   }
-
 ]

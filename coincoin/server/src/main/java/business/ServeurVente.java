@@ -15,7 +15,6 @@ import shared_interfaces.InterfaceAcheteur;
 import shared_interfaces.InterfaceServeurVente;
 
 import java.io.IOException;
-import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -38,7 +37,10 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
     private Repository repository;
     private ItemServer currentItem;
 
-    private List<InterfaceAcheteurWithUser> interfaceAcheteurList;
+
+    private List<InterfaceAcheteurWithUser> interfaceAcheteurListInscris;
+    private List<InterfaceAcheteurWithUser> interfaceAcheteurListSale;
+
     private UtilisateurServeur currentWinner;
 
     //true if the sale is actually over. False otherwise
@@ -57,9 +59,8 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
 
         repository = new RepositoryImpl();
 
-        interfaceAcheteurList = Collections.synchronizedList(new ArrayList<>());
-
-
+        interfaceAcheteurListInscris = Collections.synchronizedList(new ArrayList<>());
+        interfaceAcheteurListSale = Collections.synchronizedList(new ArrayList<>());
     }
 
     /**
@@ -67,18 +68,18 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
      */
     public void run() {
         boolean isOver = false;
-        saleOver = false;
+        saleOver = true;
         //Infinite loop
         while (! isOver) {
 
             currentItem = repository.getRandomItem();
 
-            if (amountOfWaitingUsers >= CommonVariables.AMOUNT_OF_USERS) {
+            if (interfaceAcheteurListInscris.size() >= CommonVariables.AMOUNT_OF_USERS) {
                 LOGGER.info(String.format("Vente de l'objet %s démarrée", currentItem.getNom()));
                 initiateSell();
             }
 
-            while (!interfaceAcheteurList.isEmpty() && !saleOver) { }
+            while (!interfaceAcheteurListSale.isEmpty() || !saleOver) { }
         }
     }
 
@@ -118,7 +119,7 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
 
         LOGGER.info("User added");
         //Joining the Remote object with the user server-side in a Thread-safe list
-        interfaceAcheteurList.add(new InterfaceAcheteurWithUser(utilisateurServeur, interfaceAcheteur));
+        interfaceAcheteurListInscris.add(new InterfaceAcheteurWithUser(utilisateurServeur, interfaceAcheteur));
 
     }
 
@@ -150,10 +151,10 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
         LOGGER.info(String.format("%s has finish the sale", utilisateurServeur.getNom()));
 
         //remove the buyer to the user's list
-        interfaceAcheteurList.removeIf(interfaceAcheteurWithUser ->
+        interfaceAcheteurListSale.removeIf(interfaceAcheteurWithUser ->
                 interfaceAcheteurWithUser.getUtilisateurServeur().getNom().equals(utilisateurServeur.getNom()));
 
-        if (interfaceAcheteurList.isEmpty()) {
+        if (interfaceAcheteurListSale.isEmpty()) {
             LOGGER.info("La liste des acheteurs est vide. LA vente actuelle est terminée");
             saleOver = true;
         }
@@ -164,7 +165,7 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
      * @param prix the new price
      */
     public void modifyPrice(double prix) {
-        interfaceAcheteurList.forEach(interfaceAcheteurWithUser -> {
+        interfaceAcheteurListInscris.forEach(interfaceAcheteurWithUser -> {
             try {
                 interfaceAcheteurWithUser.getInterfaceAcheteur().nouveau_prix(prix);
             } catch (RemoteException e) {
@@ -181,12 +182,13 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
 
         //FIXME sending nouvelle soumission right after adding them wont work
         saleOver = false;
-        if (! interfaceAcheteurList.isEmpty()) {
+        if (! interfaceAcheteurListInscris.isEmpty()) {
 
             LOGGER.info("Notifying users");
             amountOfWaitingUsers = 0;
+            interfaceAcheteurListSale = Collections.synchronizedList(new ArrayList<>(interfaceAcheteurListInscris));
 
-            interfaceAcheteurList.forEach(interfaceAcheteurWithUser -> {
+            interfaceAcheteurListSale.forEach(interfaceAcheteurWithUser -> {
                 try {
                     LOGGER.info(String.format("%s notified", interfaceAcheteurWithUser.getUtilisateurServeur().getNom()));
                     interfaceAcheteurWithUser.getInterfaceAcheteur().nouvelle_soumission(OBJECT_MAPPER.writeValueAsString(ItemToItemDTOConverter.convert(currentItem)));

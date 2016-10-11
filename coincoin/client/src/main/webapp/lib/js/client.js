@@ -24,32 +24,45 @@ coincoinApp.controller('itemController', function ($scope, $http, $interval, $lo
     $scope.mail;
     $scope.domaine = $location.protocol() + "://" + $location.host() + ":" + $location.port();
 
-    $scope.item =
+    $scope.item = null;
+        /*
     {
         "nom": "Magnifique canard",
         "description": "Un magnifique canard idéal pour commencer une collection de canards (vivants). Volaille en très bon état. aucune plume manquante ! cause : Décès du proprietaire.",
         "prix": 120
     };
+       */
+    /**
+     * Control of the item
+     */
+    $scope.isItemEmpty = function() {
+        return ( $scope.item == null );
+    }
 
-    $scope.prixActuel = $scope.item.prix;
+    $scope.prixActuel = $scope.isItemEmpty()?0:$scope.item.prix;
     $scope.prixPropose = $scope.prixActuel + 1;
-    $scope.requestUrl = "https://www.googleapis.com/customsearch/v1?key="+$scope.keyapi+"&cx="+$scope.cx+"&q="+$scope.item.nom+"&searchType=image&num=1"
-    $http({
-        method : "GET",
-        url : $scope.requestUrl
-    }).then(function (response) {
-        $scope.data = response.data;
-        $scope.img =  $scope.data.items[0];
-    }, function (response) {
-        $scope.data = response.statusText;
-    });
+    $scope.requestUrl = $scope.isItemEmpty()?"":"https://www.googleapis.com/customsearch/v1?key="+$scope.keyapi+"&cx="+$scope.cx+"&q="+$scope.item.nom+"&searchType=image&num=1";
+    if (!$scope.isItemEmpty) {
+        $http({
+            method: "GET",
+            url: $scope.requestUrl
+        }).then(function (response) {
+            $scope.data = response.data;
+            $scope.img = $scope.data.items[0];
+        }, function (response) {
+            $scope.data = response.statusText;
+        });
+    }
 
     /**
      * Used to change the price of the item
      */
     $scope.changerPrix = function() {
-        if ($scope.prixPropose > $scope.prixActuel) {
-            var parameters = {nom:$scope.item.nom,newPrice:$scope.prixPropose}
+        if (($scope.prixPropose > $scope.prixActuel) && !$scope.isItemEmpty) {
+            var parameters = {
+                nom:$scope.item.nom,
+                newPrice:$scope.prixPropose
+            }
             $http({
                 method: "POST",
                 url: $scope.domaine+"/bid",

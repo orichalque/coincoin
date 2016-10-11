@@ -77,7 +77,6 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur{
         try {
             Registry registry = LocateRegistry.getRegistry(CommonVariables.PORT);
             serveurVente = (InterfaceServeurVente) registry.lookup("serveur");
-            //startChrono();
         } catch (NotBoundException e) {
             LOGGER.log(Level.SEVERE, "Cannot reach the distant server", e);
         }
@@ -101,7 +100,7 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur{
         //3- changer l'etatCourant en participant
         essaiEtatString="participant";
         etatCourant=etatParticipant;
-//        startChrono();
+        chrono.start();
     }
 
 
@@ -202,18 +201,12 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur{
      */
     public synchronized void temps_ecoule() throws RemoteException {
         etatCourant = etatTermine;
-        serveurVente.tempsEcoule(utilisateur.getPseudo());
+        try {
+            serveurVente.tempsEcoule(OBJECT_MAPPER.writeValueAsString(UtilisateurToUtilisateurDTOConverter.convert(utilisateur)));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
-
-    /**
-     * Lancé a l'initialisation du client pour créer un timer sur la vente.
-     */
-    public void startChrono() {
-        chrono.start();
-    }
-
-
-
 
     public Utilisateur getUtilisateur() {
         return utilisateur;

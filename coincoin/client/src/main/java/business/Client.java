@@ -23,6 +23,8 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -100,7 +102,18 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur{
         //3- changer l'etatCourant en participant
         essaiEtatString="participant";
         etatCourant=etatParticipant;
-        chrono.start();
+
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    LOGGER.info("Temps écoulé");
+                    temps_ecoule();
+                } catch (RemoteException e) {
+                    LOGGER.log(Level.WARNING, "Remote error on the timer", e);
+                }
+            }
+        }, 10000);
     }
 
 

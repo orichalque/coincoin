@@ -14,7 +14,7 @@ coincoinApp.controller('itemController', function ($scope, $http, $interval, $lo
      * Google custom search request
      * Used to find the first occurence of an img search
      */
-    $scope.keyapi =""//"AIzaSyChJwwtkZUbukQ8Mk-Q6uI6GigZ7t2-T5s"
+    $scope.keyapi ="AIzaSyChJwwtkZUbukQ8Mk-Q6uI6GigZ7t2-T5s"
     $scope.cx = "000337515704215858772:qphvdedtcsw"
 
     $scope.authentified = false;

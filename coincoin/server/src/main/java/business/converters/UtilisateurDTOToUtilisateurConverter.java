@@ -17,7 +17,7 @@ public class UtilisateurDTOToUtilisateurConverter {
         UtilisateurServeur utilisateurServeur = new UtilisateurServeur();
         utilisateurServeur.setNom(utilisateurDTO.getNom());
         utilisateurServeur.setEmail(utilisateurDTO.getEmail());
-
+        utilisateurServeur.setIp(utilisateurDTO.getIp());
         return utilisateurServeur;
     }
 }

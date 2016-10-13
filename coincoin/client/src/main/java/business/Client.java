@@ -17,6 +17,7 @@ import shared_interfaces.InterfaceAcheteur;
 import shared_interfaces.InterfaceServeurVente;
 
 import java.io.IOException;
+import java.rmi.AccessException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -55,6 +56,7 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur{
     private InterfaceServeurVente serveurVente;
     private Chrono chrono;
 
+    private Registry registry;
 
     public static Client getInstance() {
         if (instance == null) {
@@ -73,14 +75,28 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur{
      */
     public Client() throws RemoteException {
         super();
+        registry = null;
         this.etatCourant = etatAttente;
         this.essaiEtatString = "attente";
         this.chrono = new Chrono();
+
+    }
+
+    /**
+     * Connect the client to the server
+     * @param ip the ip of the server the users entered on the web page
+     */
+    public void connectToServer(String ip) {
         try {
-            Registry registry = LocateRegistry.getRegistry("172.16.134.149", CommonVariables.PORT);
+            registry = LocateRegistry.getRegistry(ip, CommonVariables.PORT);
             serveurVente = (InterfaceServeurVente) registry.lookup("serveur");
+            LOGGER.log(Level.SEVERE, "Connection to the server successful");
         } catch (NotBoundException e) {
-            LOGGER.log(Level.SEVERE, "Cannot reach the distant server", e);
+            LOGGER.log(Level.SEVERE, "The server is not instanciated", e);
+        } catch (AccessException e) {
+            LOGGER.log(Level.SEVERE, "Cannot access to the server", e);
+        } catch (RemoteException e) {
+            LOGGER.log(Level.SEVERE, "Not allowed to reach the server", e);
         }
     }
 
@@ -187,13 +203,14 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur{
      */
     public void inscription() throws RemoteException {
         try {
-            Registry registry = LocateRegistry.getRegistry(CommonVariables.PORT);
-            LOGGER.info("Registry obtained");
+//            Registry registry = LocateRegistry.getRegistry("172.16.134.150", CommonVariables.PORT);
+//            LOGGER.info("Registry obtained");
 
             String serializedUser = OBJECT_MAPPER.writeValueAsString(UtilisateurToUtilisateurDTOConverter.convert(utilisateur));
             LOGGER.info(String.format("Binding %s to the rmi registry", utilisateur.getPseudo()));
 
-            registry.bind(utilisateur.getPseudo(), this);
+
+            registry.rebind(utilisateur.getPseudo(), this);
             LOGGER.info(String.format("Client %s bound to the registry", utilisateur.getPseudo()));
 
             serveurVente.insc_acheteur(serializedUser);
@@ -201,8 +218,6 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur{
             LOGGER.log(Level.WARNING, String.format("Cannot send the new user to the serveur"), e);
         } catch (JsonProcessingException e) {
             LOGGER.log(Level.WARNING, String.format("Cannot serialize the user "), e);
-        } catch (AlreadyBoundException e) {
-            LOGGER.log(Level.WARNING, String.format("The user is already bound in the registry"));
         }
     }
 

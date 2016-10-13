@@ -17,7 +17,6 @@ public class ItemToItemDTOConverter {
         itemDTO.setNom(itemServer.getNom());
         itemDTO.setDescription(itemServer.getDescription());
         itemDTO.setPrix(itemServer.getPrix());
-
         return itemDTO;
     }
 }

@@ -99,7 +99,7 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
         InterfaceAcheteur interfaceAcheteur = null;
         try {
 
-            interfaceAcheteur = (InterfaceAcheteur) LocateRegistry.getRegistry(CommonVariables.PORT).lookup(utilisateurServeur.getNom());
+            interfaceAcheteur = (InterfaceAcheteur) LocateRegistry.getRegistry(utilisateurServeur.getIp(), CommonVariables.PORT).lookup(utilisateurServeur.getNom());
 
         } catch (RemoteException e) {
             LOGGER.log(Level.WARNING, "Remote exception throwed when fetching user", e);

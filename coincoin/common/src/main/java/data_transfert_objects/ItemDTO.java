@@ -26,6 +26,7 @@ public class ItemDTO implements Serializable{
     private String nom;
     @JsonProperty("description")
     private String description;
+
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 

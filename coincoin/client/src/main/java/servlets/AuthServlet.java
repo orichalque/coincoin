@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.InetAddress;
 
 /**
  * Created by Thibault on 06/10/16.
@@ -23,6 +24,8 @@ public class AuthServlet extends HttpServlet {
         Utilisateur utilisateur = new Utilisateur();
         utilisateur.setPseudo(req.getParameter("nom"));
         utilisateur.setMail(req.getParameter("mail"));
+        utilisateur.setIp(InetAddress.getLocalHost().getHostAddress());
         client.setUtilisateur(utilisateur);
+        client.connectToServer(req.getParameter("ip"));
     }
 }

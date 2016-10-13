@@ -21,6 +21,7 @@ public class UtilisateurToUtilisateurDTOConverter {
         if (utilisateurServer != null) {
             utilisateurDTO.setNom(utilisateurServer.getPseudo());
             utilisateurDTO.setEmail(utilisateurServer.getMail());
+            utilisateurDTO.setIp(utilisateurServer.getIp());
         }
         return utilisateurDTO;
     }

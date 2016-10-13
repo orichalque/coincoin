@@ -22,6 +22,8 @@ public class UtilisateurDTO implements Serializable{
     private String email;
     @JsonProperty("nom")
     private String nom;
+    @JsonProperty("ip")
+    private String ip;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -55,6 +57,22 @@ public class UtilisateurDTO implements Serializable{
     @JsonProperty("nom")
     public void setNom(String nom) {
         this.nom = nom;
+    }
+
+    /**
+     * @return the ip
+     */
+    @JsonProperty("ip")
+    public String getIp() {
+        return ip;
+    }
+
+    /**
+     * @param ip the ip
+     */
+    @JsonProperty("ip")
+    public void setIp(String ip) {
+        this.ip = ip;
     }
 
     @JsonAnyGetter

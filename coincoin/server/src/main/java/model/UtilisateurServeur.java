@@ -7,6 +7,7 @@ package model;
 public class UtilisateurServeur {
     private String nom;
     private String email;
+    private String ip;
 
     public UtilisateurServeur() {
     }
@@ -25,5 +26,13 @@ public class UtilisateurServeur {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
     }
 }

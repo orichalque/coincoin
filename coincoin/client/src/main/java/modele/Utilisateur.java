@@ -6,6 +6,7 @@ package modele;
 public class Utilisateur {
     private String pseudo;
     private String mail;
+    private String ip;
 
     public Utilisateur(String pseudo, String mail) {
         this.pseudo = pseudo;
@@ -30,5 +31,13 @@ public class Utilisateur {
 
     public void setMail(String mail) {
         this.mail = mail;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
     }
 }

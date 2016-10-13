@@ -91,7 +91,7 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur{
             registry = LocateRegistry.getRegistry(ip, CommonVariables.PORT);
             serveurVente = (InterfaceServeurVente) registry.lookup("serveur");
 
-            LOGGER.log(Level.SEVERE, "Connection to the server successful");
+            LOGGER.log(Level.INFO, "Connection to the server successful");
         } catch (NotBoundException e) {
             LOGGER.log(Level.SEVERE, "The server is not instanciated", e);
         } catch (AccessException e) {
@@ -204,14 +204,10 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur{
      */
     public void inscription() throws RemoteException {
         try {
-//            Registry registry = LocateRegistry.getRegistry("172.16.134.150", CommonVariables.PORT);
-//            LOGGER.info("Registry obtained");
-
             String serializedUser = OBJECT_MAPPER.writeValueAsString(UtilisateurToUtilisateurDTOConverter.convert(utilisateur));
             LOGGER.info(String.format("Binding %s to the rmi registry", utilisateur.getPseudo()));
 
-
-            registry.rebind(utilisateur.getPseudo(), this);
+            LocateRegistry.createRegistry(CommonVariables.PORT).rebind(utilisateur.getPseudo(), this);
             LOGGER.info(String.format("Client %s bound to the registry", utilisateur.getPseudo()));
 
             serveurVente.insc_acheteur(serializedUser);

@@ -77,7 +77,7 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur{
         this.essaiEtatString = "attente";
         this.chrono = new Chrono();
         try {
-            Registry registry = LocateRegistry.getRegistry(CommonVariables.PORT);
+            Registry registry = LocateRegistry.getRegistry("172.16.134.149", CommonVariables.PORT);
             serveurVente = (InterfaceServeurVente) registry.lookup("serveur");
         } catch (NotBoundException e) {
             LOGGER.log(Level.SEVERE, "Cannot reach the distant server", e);

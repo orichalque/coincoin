@@ -90,6 +90,7 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur{
         try {
             registry = LocateRegistry.getRegistry(ip, CommonVariables.PORT);
             serveurVente = (InterfaceServeurVente) registry.lookup("serveur");
+
             LOGGER.log(Level.SEVERE, "Connection to the server successful");
         } catch (NotBoundException e) {
             LOGGER.log(Level.SEVERE, "The server is not instanciated", e);

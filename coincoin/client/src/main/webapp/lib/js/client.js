@@ -23,6 +23,7 @@ coincoinApp.controller('itemController', function ($scope, $http, $interval, $lo
     $scope.name;
     $scope.mail;
     $scope.domaine = $location.protocol() + "://" + $location.host() + ":" + $location.port();
+    $scope.ip;
 
     $scope.item = "";
 
@@ -98,7 +99,7 @@ coincoinApp.controller('itemController', function ($scope, $http, $interval, $lo
         $http({
             method : "POST",
             url : $scope.domaine+"/authentify",
-            params : {"nom":$scope.name, "mail":$scope.mail, "ip": $location.host}
+            params : {"nom":$scope.name, "mail":$scope.mail, "ip": $scope.ip}
         }).then(function () {
             $scope.authentified = true;
         }, function () {

@@ -100,6 +100,7 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
         try {
 
             interfaceAcheteur = (InterfaceAcheteur) LocateRegistry.getRegistry(utilisateurServeur.getIp(), CommonVariables.PORT).lookup(utilisateurServeur.getNom());
+            LOGGER.info(String.format("Interface for user %s obtained", utilisateurServeur.getNom()));
 
         } catch (RemoteException e) {
             LOGGER.log(Level.WARNING, "Remote exception throwed when fetching user", e);
@@ -194,8 +195,8 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
 
             interfaceAcheteurListSale.forEach(interfaceAcheteurWithUser -> {
                 try {
-                    LOGGER.info(String.format("%s notified", interfaceAcheteurWithUser.getUtilisateurServeur().getNom()));
                     interfaceAcheteurWithUser.getInterfaceAcheteur().nouvelle_soumission(OBJECT_MAPPER.writeValueAsString(ItemToItemDTOConverter.convert(currentItem)));
+                    LOGGER.info(String.format("%s notified", interfaceAcheteurWithUser.getUtilisateurServeur().getNom()));
                 } catch (RemoteException e) {
                     LOGGER.log(Level.WARNING, String.format("Cannot send the new item to the user %s", interfaceAcheteurWithUser.getUtilisateurServeur().getNom()), e);
                 } catch (JsonProcessingException e) {

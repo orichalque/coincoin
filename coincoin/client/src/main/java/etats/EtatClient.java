@@ -1,6 +1,7 @@
 package etats;
 
 import business.Client;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.rmi.RemoteException;
 import java.util.logging.Logger;
@@ -10,6 +11,7 @@ import java.util.logging.Logger;
  */
 public abstract class EtatClient {
     protected Client client;
+    protected static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     protected static final Logger LOGGER = Logger.getAnonymousLogger();
 
     /**

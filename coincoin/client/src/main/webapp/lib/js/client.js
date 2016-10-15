@@ -22,6 +22,7 @@ coincoinApp.controller('itemController', function ($scope, $http, $interval, $lo
 
     $scope.name;
     $scope.mail;
+    $scope.winner;
     $scope.domaine = $location.protocol() + "://" + $location.host() + ":" + $location.port();
     $scope.ip;
 
@@ -89,6 +90,8 @@ coincoinApp.controller('itemController', function ($scope, $http, $interval, $lo
                     $scope.item.prix = response.data.prix;
                     $scope.prixActuel = $scope.item.prix;
                     $scope.prixPropose = $scope.prixActuel + 1;
+                    $scope.winner = response.data.winner;
+
                 }
             }, function () {
             });

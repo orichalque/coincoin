@@ -139,7 +139,7 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
 
             LOGGER.info(String.format("%s is the current winner", currentWinner));
 
-            modifyPrice(prix);
+            modifyPrice(prix, currentWinner.getNom());
         }
     }
 
@@ -169,10 +169,10 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
      * Notify all the buyers of the new price of the item
      * @param prix the new price
      */
-    public void modifyPrice(double prix) {
+    public void modifyPrice(double prix, String currentWinner) {
         interfaceAcheteurListInscris.forEach(interfaceAcheteurWithUser -> {
             try {
-                interfaceAcheteurWithUser.getInterfaceAcheteur().nouveau_prix(prix);
+                interfaceAcheteurWithUser.getInterfaceAcheteur().nouveau_prix(prix, currentWinner);
             } catch (RemoteException e) {
                 LOGGER.log(Level.WARNING, String.format("Can not notify the new price to the user %s", interfaceAcheteurWithUser.getUtilisateurServeur().getNom()), e);
             }
@@ -213,7 +213,7 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
      */
     private UtilisateurServeur getUtilisateurFromDTO(String utilisateurAsString) {
         UtilisateurServeur utilisateur = null;
-
+        LOGGER.info(utilisateurAsString);
         try {
             utilisateur = UtilisateurDTOToUtilisateurConverter.convert(OBJECT_MAPPER.readValue(utilisateurAsString, UtilisateurDTO.class));
         } catch (IOException exception) {

@@ -12,7 +12,7 @@ public class CommonVariables {
 
     public final static String DATA_BASE_NAME = "itemDataBase.json";
 
-    public static final int TEMPS_VENTE = 10000;
+    public static final int TEMPS_VENTE = 100000;
 
 
     public static final int PORT = 6668;

@@ -4,6 +4,7 @@ import business.Client;
 import business.converters.ItemToItemDTOConverter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import common.CommonVariables;
+import data_transfert_objects.ItemDTO;
 import modele.ItemClient;
 
 import javax.servlet.ServletException;
@@ -28,7 +29,9 @@ public class UpdateServlet extends HttpServlet {
         if (itemClient != null) {
             ObjectMapper objectMapper = new ObjectMapper();
             resp.setContentType(CommonVariables.CONTENT_TYPE);
-            String content = objectMapper.writeValueAsString(ItemToItemDTOConverter.convert(itemClient));
+            ItemDTO itemDTO = ItemToItemDTOConverter.convert(itemClient);
+            itemDTO.setWinner(client.getCurrentWinner());
+            String content = objectMapper.writeValueAsString(itemDTO);
             resp.getWriter().write(content);
         }
 

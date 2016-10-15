@@ -48,7 +48,7 @@ public class ClientParticipantTest {
             public Void answer(InvocationOnMock invocationOnMock) throws Throwable {
                 Object[] objects = invocationOnMock.getArguments();
 
-                Assert.assertEquals("pseudo", (String) objects[0]);
+                Assert.assertEquals("{\"email\":\"mail\",\"nom\":\"pseudo\"}", (String) objects[0]);
                 Assert.assertTrue(50 == (double) objects[1]);
                 return null;
             }

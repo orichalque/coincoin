@@ -47,7 +47,7 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur{
     private ClientAttente etatAttente = new ClientAttente(this);
     private ClientParticipant etatParticipant= new ClientParticipant(this);
     private ClientTermine etatTermine= new ClientTermine(this);
-
+    private String currentWinner;
 
     private Utilisateur utilisateur;
     private String essaiEtatString;
@@ -130,7 +130,7 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur{
                     LOGGER.log(Level.WARNING, "Remote error on the timer", e);
                 }
             }
-        }, 10000);
+        }, CommonVariables.TEMPS_VENTE);
     }
 
 
@@ -154,9 +154,11 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur{
      * @param prix nouveau prix
      */
     @Override
-    public void nouveau_prix(double prix) {
+    public void nouveau_prix(double prix, String winnerName) {
         if (itemCourant != null) {
             itemCourant.setPrix(prix);
+            currentWinner = winnerName;
+            LOGGER.info(String.format("Le gagnant en cours est %s", winnerName));
         } else {
             itemCourant = new ItemClient(prix, "erreur init", "erreur init");
         }
@@ -207,7 +209,7 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur{
             String serializedUser = OBJECT_MAPPER.writeValueAsString(UtilisateurToUtilisateurDTOConverter.convert(utilisateur));
             LOGGER.info(String.format("Binding %s to the rmi registry", utilisateur.getPseudo()));
 
-            LocateRegistry.createRegistry(CommonVariables.PORT).bind(utilisateur.getPseudo(), this);
+            LocateRegistry.getRegistry(CommonVariables.PORT).bind(utilisateur.getPseudo(), this);
             LOGGER.info(String.format("Client %s bound to the registry", utilisateur.getPseudo()));
 
             serveurVente.insc_acheteur(serializedUser);
@@ -236,36 +238,38 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur{
         }
     }
 
+    /**
+     * @return current utilisateur
+     */
     public Utilisateur getUtilisateur() {
         return utilisateur;
     }
 
+    /**
+     * @param utilisateur the utilisateur to set
+     */
     public void setUtilisateur(Utilisateur utilisateur) {
         this.utilisateur = utilisateur;
     }
 
-    public EtatClient getEtatCourant() {
-        return etatCourant;
-    }
-
-    public void setEtatCourant(EtatClient etatCourant) {
-        this.etatCourant = etatCourant;
-    }
-
-
+    /**
+     * @return current itemCourant
+     */
     public ItemClient getItemCourant() {
         return itemCourant;
     }
 
-    public void setItemCourant(ItemClient itemCourant) {
-        this.itemCourant = itemCourant;
-    }
-
+    /**
+     * @return current serveurVente
+     */
     public InterfaceServeurVente getServeurVente() {
         return serveurVente;
     }
 
-    public void setServeurVente(InterfaceServeurVente serveurVente) {
-        this.serveurVente = serveurVente;
+    /**
+     * @return current currentWinner
+     */
+    public String getCurrentWinner() {
+        return currentWinner;
     }
 }

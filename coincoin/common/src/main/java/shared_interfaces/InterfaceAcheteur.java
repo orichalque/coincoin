@@ -13,6 +13,6 @@ public interface InterfaceAcheteur extends Remote {
 
     void objet_vendu(String utilisateurDTO) throws RemoteException;
 
-    void nouveau_prix(double prix) throws RemoteException;
+    void nouveau_prix(double prix, String winnerName) throws RemoteException;
 
 }

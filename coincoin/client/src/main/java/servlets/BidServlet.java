@@ -37,7 +37,7 @@ public class BidServlet extends HttpServlet {
                     newPrice = Float.parseFloat(newStringPrice);
                     //Attention il faut que l'item soit non nul
                     //TODO initialisation objet à la connexion
-                    client.nouveau_prix(newPrice);
+                    client.rencherir(newPrice);
                 } else {
                     resp.sendError(304);
                     return;

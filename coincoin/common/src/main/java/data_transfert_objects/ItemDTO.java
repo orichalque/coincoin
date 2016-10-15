@@ -26,6 +26,8 @@ public class ItemDTO implements Serializable{
     private String nom;
     @JsonProperty("description")
     private String description;
+    @JsonProperty("winner")
+    private String winner;
 
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
@@ -88,6 +90,22 @@ public class ItemDTO implements Serializable{
     @JsonProperty("description")
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    /**
+     * @return current winner
+     */
+    @JsonProperty("winner")
+    public String getWinner() {
+        return winner;
+    }
+
+    /**
+     * @param winner the winner to set
+     */
+    @JsonProperty("winner")
+    public void setWinner(String winner) {
+        this.winner = winner;
     }
 
     @JsonAnyGetter

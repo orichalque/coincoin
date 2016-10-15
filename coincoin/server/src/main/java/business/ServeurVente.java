@@ -165,6 +165,21 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
         }
     }
 
+    @Override
+    public void quitter(String acheteur) throws RemoteException {
+        UtilisateurServeur utilisateurServeur = getUtilisateurFromDTO(acheteur);
+
+        LOGGER.info(String.format("%s left Coincoin", utilisateurServeur.getNom()));
+
+        interfaceAcheteurListSale.removeIf(interfaceAcheteurWithUser ->
+                interfaceAcheteurWithUser.getUtilisateurServeur().getNom().equals(utilisateurServeur.getNom()));
+
+        interfaceAcheteurListInscris.removeIf(interfaceAcheteurWithUser ->
+                interfaceAcheteurWithUser.getUtilisateurServeur().getNom().equals(utilisateurServeur.getNom()));
+
+
+    }
+
     /**
      * Notify all the buyers of the new price of the item
      * @param prix the new price

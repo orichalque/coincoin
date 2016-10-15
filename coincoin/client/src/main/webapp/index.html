@@ -107,6 +107,13 @@
             <div class="form-group fadeout" ng-show="!subscribed">
                 <button ng-click="subscribe()" type="button" class="btn btn-success">S'inscrire</button>
             </div>
+            <div class="form-group fadeout" ng-show="subscribed">
+                <button ng-click="leave()" type="button" class="btn btn-success">Quitter</button>
+            </div>
+            <div class="alert alert-warning" ng-show="showCannotLeaveAlert">
+                <a href="#" class="close" data-hide="alert" aria-label="close" data-ng-click="switchBool('showCannotLeaveAlert')">&times;</a>
+                Départ impossible: Vous gagnez l'enchère !
+            </div>
         </div>
     </div>
 </div>

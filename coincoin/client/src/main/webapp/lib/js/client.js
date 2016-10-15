@@ -19,6 +19,7 @@ coincoinApp.controller('itemController', function ($scope, $http, $interval, $lo
 
     $scope.authentified = false;
     $scope.subscribed = false;
+    $scope.showCannotLeaveAlert = false;
 
     $scope.name;
     $scope.mail;
@@ -120,5 +121,24 @@ coincoinApp.controller('itemController', function ($scope, $http, $interval, $lo
         });
         $scope.subscribed = true;
     }
+
+    $scope.leave = function() {
+        console.log($scope.showCannotLeaveAlert);
+        if ($scope.winner !== $scope.name) {
+            $http({
+                method : "POST",
+                url : $scope.domaine+"/leave"
+            }).then(function () {
+            }, function () {
+            });
+            $scope.subscribed = false;
+        } else {
+            $scope.showCannotLeaveAlert = true;
+        }
+    }
+
+    $scope.switchBool = function(value) {
+        $scope[value] = !$scope[value];
+    };
 
 });

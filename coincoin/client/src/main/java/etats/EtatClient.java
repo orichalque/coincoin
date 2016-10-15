@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 
 /**
  * Created by Dennis on 27/09/16.
+ * Item state pattern for the Client
  */
 public abstract class EtatClient {
     protected Client client;

@@ -166,6 +166,18 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur{
 
     }
 
+    public void leave() {
+        try {
+            String userAsString = null;
+            userAsString = OBJECT_MAPPER.writeValueAsString(UtilisateurToUtilisateurDTOConverter.convert(utilisateur));
+            serveurVente.quitter(userAsString);
+        } catch (JsonProcessingException e) {
+            LOGGER.log(Level.WARNING, "Cannot serialize the user", e);
+        } catch (RemoteException e) {
+            LOGGER.log(Level.WARNING, "Cannot contact the server", e);
+        }
+    }
+
     /**
      * Return an item from a String by converting a DTO
      * @param itemAsString the user dto in String format
@@ -272,4 +284,5 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur{
     public String getCurrentWinner() {
         return currentWinner;
     }
+
 }

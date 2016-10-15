@@ -76,6 +76,7 @@ coincoinApp.controller('itemController', function ($scope, $http, $interval, $lo
                     $scope.prixActuel = $scope.isItemEmpty()?0:$scope.item.prix;
                     $scope.prixPropose = $scope.prixActuel + 1;
                     $scope.requestUrl = $scope.isItemEmpty()?"":"https://www.googleapis.com/customsearch/v1?key="+$scope.keyapi+"&cx="+$scope.cx+"&q="+$scope.item.nom+"&searchType=image&num=1";
+                    $scope.winner = "";
                     $http({
                         method: "GET",
                         url: $scope.requestUrl

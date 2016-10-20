@@ -18,10 +18,8 @@ import shared_interfaces.InterfaceServeurVente;
 import sun.rmi.registry.RegistryImpl;
 
 import java.io.IOException;
-import java.rmi.AccessException;
-import java.rmi.AlreadyBoundException;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
+import java.net.MalformedURLException;
+import java.rmi.*;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
@@ -224,7 +222,8 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur{
             String serializedUser = OBJECT_MAPPER.writeValueAsString(UtilisateurToUtilisateurDTOConverter.convert(utilisateur));
             LOGGER.info(String.format("Binding %s to the rmi registry", utilisateur.getPseudo()));
 
-            registry.rebind(utilisateur.getPseudo(), this);
+            //registry.rebind(utilisateur.getPseudo(), this);
+            Naming.rebind(String.format("rmi://%s:%s/%s", utilisateur.getIp(), CommonVariables.PORT, getUtilisateur().getPseudo()), this);
             //LocateRegistry.getRegistry(CommonVariables.PORT).bind(utilisateur.getPseudo(), this);
             LOGGER.info(String.format("Client %s bound to the registry", utilisateur.getPseudo()));
 
@@ -235,7 +234,9 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur{
             LOGGER.log(Level.WARNING, String.format("Cannot serialize the user "), e);
         }/* catch (AlreadyBoundException e) {
             LOGGER.log(Level.WARNING, String.format("Cannot bind the user to the registry"), e);
-        }*/
+        }*/ catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

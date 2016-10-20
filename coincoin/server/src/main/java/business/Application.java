@@ -2,7 +2,9 @@ package business;
 
 import common.CommonVariables;
 
+import java.net.MalformedURLException;
 import java.rmi.AlreadyBoundException;
+import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -37,6 +39,7 @@ public class Application {
             LOGGER.info("Launching the registry");
             ServeurVente serveurVente = new ServeurVente();
             registry.rebind("serveur", serveurVente);
+
             LOGGER.info("Server successfully launched");
             serveurVente.run();
 

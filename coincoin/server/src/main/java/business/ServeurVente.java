@@ -98,8 +98,7 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
 
         InterfaceAcheteur interfaceAcheteur = null;
         try {
-
-            interfaceAcheteur = (InterfaceAcheteur) LocateRegistry.getRegistry(utilisateurServeur.getIp(), CommonVariables.PORT).lookup(utilisateurServeur.getNom());
+            interfaceAcheteur = (InterfaceAcheteur) LocateRegistry.getRegistry(CommonVariables.PORT).lookup(utilisateurServeur.getNom());
             LOGGER.info(String.format("Interface for user %s obtained", utilisateurServeur.getNom()));
 
         } catch (RemoteException e) {
@@ -165,6 +164,11 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
         }
     }
 
+    /**
+     * RMI called method deleting the user, erasing its registry, and
+     * @param acheteur the current buyer
+     * @throws RemoteException
+     */
     @Override
     public void quitter(String acheteur) throws RemoteException {
         UtilisateurServeur utilisateurServeur = getUtilisateurFromDTO(acheteur);
@@ -176,6 +180,12 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
 
         interfaceAcheteurListInscris.removeIf(interfaceAcheteurWithUser ->
                 interfaceAcheteurWithUser.getUtilisateurServeur().getNom().equals(utilisateurServeur.getNom()));
+
+        try {
+            LocateRegistry.getRegistry(utilisateurServeur.getIp(), CommonVariables.PORT).unbind(utilisateurServeur.getNom());
+        } catch (NotBoundException e) {
+            LOGGER.log(Level.WARNING, String.format("Cannot unbing the user %s", utilisateurServeur.getNom()), e);
+        }
 
 
     }

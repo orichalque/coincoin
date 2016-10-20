@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -91,7 +92,7 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
      */
     @Override
     public synchronized void insc_acheteur(String acheteurAsString, InterfaceAcheteur interfaceAcheteur) {
-
+        LOGGER.info(String.format("System property: %s", System.getProperty("java.rmi.server.hostname")));
         UtilisateurServeur utilisateurServeur = getUtilisateurFromDTO(acheteurAsString);
 
         LOGGER.info(String.format("Receiving an inscription request from the user %s", utilisateurServeur.getNom()));
@@ -116,7 +117,13 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
         LOGGER.info("User added");
         //Joining the Remote object with the user server-side in a Thread-safe list
         notify();
-        interfaceAcheteurListInscris.add(new InterfaceAcheteurWithUser(utilisateurServeur, interfaceAcheteur));
+        try {
+            interfaceAcheteurListInscris.add(new InterfaceAcheteurWithUser(utilisateurServeur, (InterfaceAcheteur)(LocateRegistry.getRegistry(CommonVariables.PORT).lookup(utilisateurServeur.getNom()))));
+        } catch (RemoteException e) {
+            LOGGER.log(Level.WARNING, String.format("Cannot bind the user %s", utilisateurServeur.getNom()), e);
+        } catch (NotBoundException e) {
+            LOGGER.log(Level.WARNING, String.format("The user %s has not been bound", utilisateurServeur.getNom()), e);
+        }
 
 
     }

@@ -2,12 +2,17 @@ package business;
 
 import common.CommonVariables;
 
+import javax.management.remote.rmi.RMIConnection;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
+import java.net.UnknownHostException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.RemoteServer;
+import java.rmi.server.ServerNotActiveException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,6 +40,9 @@ public class Application {
 
         try {
 
+            System.setProperty("java.rmi.server.hostname", InetAddress.getLocalHost().getHostAddress());
+            LOGGER.info(String.format("IP configured at %s", InetAddress.getLocalHost().getHostAddress()));
+
             registry = LocateRegistry.createRegistry(CommonVariables.PORT);
             LOGGER.info("Launching the registry");
             ServeurVente serveurVente = new ServeurVente();
@@ -45,6 +53,8 @@ public class Application {
 
         } catch (RemoteException e) {
             LOGGER.log(Level.WARNING, "Cannot bind the server with RMI", e);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
         }
     }
 }

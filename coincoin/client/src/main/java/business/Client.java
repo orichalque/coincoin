@@ -113,12 +113,8 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur{
         itemCourant = getItemFromDTO(nouvelItemDTO);
 
         LOGGER.info(String.format("Receiving a new submission: %s", itemCourant.getNom()));
-        //1-Transformation du DTO en item et changement item
 
-        //2- MAJ IHM?
-
-        //3- changer l'etatCourant en participant
-        essaiEtatString="participant";
+//        essaiEtatString="participant";
         etatCourant=etatParticipant;
 
         new Timer().schedule(new TimerTask() {

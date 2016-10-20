@@ -118,10 +118,11 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
             }
         }
         //Make the user wait
-
         LOGGER.info("User added");
         //Joining the Remote object with the user server-side in a Thread-safe list
+        notify();
         interfaceAcheteurListInscris.add(new InterfaceAcheteurWithUser(utilisateurServeur, interfaceAcheteur));
+
 
     }
 

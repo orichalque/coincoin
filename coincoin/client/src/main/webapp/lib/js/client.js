@@ -21,7 +21,7 @@ coincoinApp.controller('itemController', function ($scope, $http, $interval, $lo
     $scope.subscribed = false;
     $scope.showCannotLeaveAlert = false;
 
-    $scope.name;
+    $scope.name="";
     $scope.mail;
     $scope.winner;
     $scope.domaine = $location.protocol() + "://" + $location.host() + ":" + $location.port();
@@ -74,6 +74,7 @@ coincoinApp.controller('itemController', function ($scope, $http, $interval, $lo
             }).then(function (response) {
                 if ((response.data != "") && ($scope.isItemEmpty() || (response.data.nom != $scope.item.nom))){
                     $scope.item = response.data;
+                    $scope.item.prix = Math.round($scope.item.prix*10)/10;
                     $scope.prixActuel = $scope.isItemEmpty()?0:$scope.item.prix;
                     $scope.prixPropose = $scope.prixActuel + 1;
                     $scope.requestUrl = $scope.isItemEmpty()?"":"https://www.googleapis.com/customsearch/v1?key="+$scope.keyapi+"&cx="+$scope.cx+"&q="+$scope.item.nom+"&searchType=image&num=1";
@@ -89,7 +90,7 @@ coincoinApp.controller('itemController', function ($scope, $http, $interval, $lo
                     });
                 }
                 if ((response.data != "") && (response.data.nom == $scope.item.nom) && ($scope.item.prix != response.data.prix)){
-                    $scope.item.prix = response.data.prix;
+                    $scope.item.prix = Math.round(response.data.prix*10)/10;
                     $scope.prixActuel = $scope.item.prix;
                     $scope.prixPropose = $scope.prixActuel + 1;
                     $scope.winner = response.data.winner;

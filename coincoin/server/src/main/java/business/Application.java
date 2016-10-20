@@ -45,8 +45,6 @@ public class Application {
 
         } catch (RemoteException e) {
             LOGGER.log(Level.WARNING, "Cannot bind the server with RMI", e);
-        }/* catch (AlreadyBoundException e) {
-            LOGGER.log(Level.WARNING, "Server already bound", e);
-        }*/
+        }
     }
 }

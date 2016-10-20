@@ -219,22 +219,16 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur{
      */
     public void inscription() throws RemoteException {
         try {
+            LOGGER.info("Sending the user to the server");
+
             String serializedUser = OBJECT_MAPPER.writeValueAsString(UtilisateurToUtilisateurDTOConverter.convert(utilisateur));
-            LOGGER.info(String.format("Binding %s to the rmi registry", utilisateur.getPseudo()));
 
-            registry.rebind(utilisateur.getPseudo(), this);
-
-            //LocateRegistry.getRegistry(CommonVariables.PORT).bind(utilisateur.getPseudo(), this);
-            LOGGER.info(String.format("Client %s bound to the registry", utilisateur.getPseudo()));
-
-            serveurVente.insc_acheteur(serializedUser);
+            serveurVente.insc_acheteur(serializedUser, this);
         } catch (RemoteException e) {
             LOGGER.log(Level.WARNING, String.format("Cannot send the new user to the serveur"), e);
         } catch (JsonProcessingException e) {
             LOGGER.log(Level.WARNING, String.format("Cannot serialize the user "), e);
-        }/* catch (AlreadyBoundException e) {
-            LOGGER.log(Level.WARNING, String.format("Cannot bind the user to the registry"), e);
-        }*/
+        }
     }
 
     /**

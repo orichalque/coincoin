@@ -12,7 +12,7 @@ public interface InterfaceServeurVente extends Remote {
      * @param acheteur the current buyer
      * @throws RemoteException
      */
-    public void insc_acheteur(String acheteur) throws RemoteException;
+    public void insc_acheteur(String acheteur, InterfaceAcheteur interfaceAcheteur) throws RemoteException;
 
     /**
      * bid on the currently sold item

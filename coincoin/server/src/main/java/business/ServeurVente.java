@@ -90,21 +90,16 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
      * @param acheteurAsString
      */
     @Override
-    public synchronized void insc_acheteur(String acheteurAsString) {
+    public synchronized void insc_acheteur(String acheteurAsString, InterfaceAcheteur interfaceAcheteur) {
 
         UtilisateurServeur utilisateurServeur = getUtilisateurFromDTO(acheteurAsString);
 
         LOGGER.info(String.format("Receiving an inscription request from the user %s", utilisateurServeur.getNom()));
 
-        InterfaceAcheteur interfaceAcheteur = null;
         try {
-            interfaceAcheteur = (InterfaceAcheteur) LocateRegistry.getRegistry(CommonVariables.PORT).lookup(utilisateurServeur.getNom());
-            LOGGER.info(String.format("Interface for user %s obtained", utilisateurServeur.getNom()));
-
+            LocateRegistry.getRegistry(CommonVariables.PORT).rebind(utilisateurServeur.getNom(), interfaceAcheteur);
         } catch (RemoteException e) {
-            LOGGER.log(Level.WARNING, "Remote exception throwed when fetching user", e);
-        } catch (NotBoundException e) {
-            LOGGER.log(Level.WARNING, "The user does not exist", e);
+            LOGGER.log(Level.WARNING, "Cannot bind the newly received user", e);
         }
 
         amountOfWaitingUsers++;

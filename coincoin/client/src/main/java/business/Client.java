@@ -15,6 +15,7 @@ import modele.ItemClient;
 import modele.Utilisateur;
 import shared_interfaces.InterfaceAcheteur;
 import shared_interfaces.InterfaceServeurVente;
+import sun.rmi.registry.RegistryImpl;
 
 import java.io.IOException;
 import java.rmi.AccessException;
@@ -89,7 +90,9 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur{
     public void connectToServer(String ip) {
         try {
             registry = LocateRegistry.getRegistry(ip, CommonVariables.PORT);
+            LOGGER.log(Level.INFO,  " registre " + registry.toString());
             serveurVente = (InterfaceServeurVente) registry.lookup("serveur");
+
 
             LOGGER.log(Level.INFO, "Connection to the server successful");
         } catch (NotBoundException e) {
@@ -221,7 +224,7 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur{
             String serializedUser = OBJECT_MAPPER.writeValueAsString(UtilisateurToUtilisateurDTOConverter.convert(utilisateur));
             LOGGER.info(String.format("Binding %s to the rmi registry", utilisateur.getPseudo()));
 
-            registry.bind(utilisateur.getPseudo(), this);
+            registry.rebind(utilisateur.getPseudo(), this);
             //LocateRegistry.getRegistry(CommonVariables.PORT).bind(utilisateur.getPseudo(), this);
             LOGGER.info(String.format("Client %s bound to the registry", utilisateur.getPseudo()));
 
@@ -230,9 +233,9 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur{
             LOGGER.log(Level.WARNING, String.format("Cannot send the new user to the serveur"), e);
         } catch (JsonProcessingException e) {
             LOGGER.log(Level.WARNING, String.format("Cannot serialize the user "), e);
-        } catch (AlreadyBoundException e) {
+        }/* catch (AlreadyBoundException e) {
             LOGGER.log(Level.WARNING, String.format("Cannot bind the user to the registry"), e);
-        }
+        }*/
     }
 
     /**

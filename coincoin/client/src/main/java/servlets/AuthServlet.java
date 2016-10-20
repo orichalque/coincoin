@@ -20,6 +20,7 @@ public class AuthServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        System.out.println("Post received");
         Client client = Client.getInstance();
         Utilisateur utilisateur = new Utilisateur();
         utilisateur.setPseudo(req.getParameter("nom"));

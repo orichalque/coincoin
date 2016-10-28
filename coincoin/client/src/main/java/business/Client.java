@@ -87,6 +87,7 @@ public class Client extends UnicastRemoteObject implements InterfaceAcheteur{
      */
     public void connectToServer(String ip) {
         try {
+            System.setProperty("java.rmi.server.hostname",ip);
             registry = LocateRegistry.getRegistry(ip, CommonVariables.PORT);
             LOGGER.log(Level.INFO,  " registre " + registry.toString());
             serveurVente = (InterfaceServeurVente) registry.lookup("serveur");

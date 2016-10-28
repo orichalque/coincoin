@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,7 +47,7 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
     private boolean saleOver;
 
     //Ensure that the value is the same for every thread
-    private volatile int amountOfWaitingUsers;
+    private volatile int amountOfUsers;
 
     /**
      * Constructor
@@ -56,7 +55,7 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
     public ServeurVente() throws RemoteException {
         super();
 
-        amountOfWaitingUsers = 0;
+        amountOfUsers = 0;
 
         repository = new RepositoryImpl();
 
@@ -103,27 +102,60 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
             LOGGER.log(Level.WARNING, "Cannot bind the newly received user", e);
         }
 
-        amountOfWaitingUsers++;
-        LOGGER.info(String.format("Currently %s users waiting", amountOfWaitingUsers));
-
-        while (amountOfWaitingUsers < CommonVariables.AMOUNT_OF_USERS) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                LOGGER.log(Level.INFO, "Waiting interrupted", e);
+        amountOfUsers++;
+        LOGGER.info(String.format("Currently %s users waiting", amountOfUsers));
+        if (amountOfUsers < CommonVariables.AMOUNT_OF_USERS) {
+            while (amountOfUsers < CommonVariables.AMOUNT_OF_USERS) {
+                //Make the user wait
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    LOGGER.log(Level.INFO, "First Waiting interrupted", e);
+                }
             }
+
+            LOGGER.info("User added");
+            //Joining the Remote object with the user server-side in a Thread-safe list
+            try {
+                interfaceAcheteurListInscris.add(new InterfaceAcheteurWithUser(utilisateurServeur, (InterfaceAcheteur)(LocateRegistry.getRegistry(CommonVariables.PORT).lookup(utilisateurServeur.getNom()))));
+            } catch (RemoteException e) {
+                LOGGER.log(Level.WARNING, String.format("Cannot bind the user %s", utilisateurServeur.getNom()), e);
+            } catch (NotBoundException e) {
+                LOGGER.log(Level.WARNING, String.format("The user %s has not been bound", utilisateurServeur.getNom()), e);
+            }
+        }else{
+            if(amountOfUsers == CommonVariables.AMOUNT_OF_USERS){//dernier user requis pour commencer la vente
+                LOGGER.info("User added");
+                //Joining the Remote object with the user server-side in a Thread-safe list
+                try {
+                    interfaceAcheteurListInscris.add(new InterfaceAcheteurWithUser(utilisateurServeur, (InterfaceAcheteur)(LocateRegistry.getRegistry(CommonVariables.PORT).lookup(utilisateurServeur.getNom()))));
+                } catch (RemoteException e) {
+                    LOGGER.log(Level.WARNING, String.format("Cannot bind the user %s", utilisateurServeur.getNom()), e);
+                } catch (NotBoundException e) {
+                    LOGGER.log(Level.WARNING, String.format("The user %s has not been bound", utilisateurServeur.getNom()), e);
+                }
+                notifyAll();//reveil des autres users en attente
+            }else{ // arrivé apres le début des ventes, attente
+                LOGGER.info("attente d'un utilisateur apres commecencement");
+                try {
+                    wait(); // reveillé normalement par le notifyAll de initiateSell
+                } catch (InterruptedException e) {
+                    LOGGER.log(Level.INFO, "Waiting interrupted for new session", e);
+                }
+                //Joining the Remote object with the user server-side in a Thread-safe list
+                try {
+                    interfaceAcheteurListInscris.add(new InterfaceAcheteurWithUser(utilisateurServeur, (InterfaceAcheteur)(LocateRegistry.getRegistry(CommonVariables.PORT).lookup(utilisateurServeur.getNom()))));
+                } catch (RemoteException e) {
+                    LOGGER.log(Level.WARNING, String.format("Cannot bind the user %s", utilisateurServeur.getNom()), e);
+                } catch (NotBoundException e) {
+                    LOGGER.log(Level.WARNING, String.format("The user %s has not been bound", utilisateurServeur.getNom()), e);
+                }
+                LOGGER.info("User added");
+
+            }
+
         }
-        //Make the user wait
-        LOGGER.info("User added");
-        //Joining the Remote object with the user server-side in a Thread-safe list
-        notify();
-        try {
-            interfaceAcheteurListInscris.add(new InterfaceAcheteurWithUser(utilisateurServeur, (InterfaceAcheteur)(LocateRegistry.getRegistry(CommonVariables.PORT).lookup(utilisateurServeur.getNom()))));
-        } catch (RemoteException e) {
-            LOGGER.log(Level.WARNING, String.format("Cannot bind the user %s", utilisateurServeur.getNom()), e);
-        } catch (NotBoundException e) {
-            LOGGER.log(Level.WARNING, String.format("The user %s has not been bound", utilisateurServeur.getNom()), e);
-        }
+
 
 
     }
@@ -161,7 +193,7 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
 
 
         if (interfaceAcheteurListSale.isEmpty()) {
-            LOGGER.info("La liste des acheteurs est vide. LA vente actuelle est terminée");
+            LOGGER.info("La liste des participants est vide. LA vente actuelle est terminée");
 
             saleOver = true;
         }
@@ -181,9 +213,11 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
         interfaceAcheteurListSale.removeIf(interfaceAcheteurWithUser ->
                 interfaceAcheteurWithUser.getUtilisateurServeur().getNom().equals(utilisateurServeur.getNom()));
 
-        interfaceAcheteurListInscris.removeIf(interfaceAcheteurWithUser ->
+        boolean deleted = interfaceAcheteurListInscris.removeIf(interfaceAcheteurWithUser ->
                 interfaceAcheteurWithUser.getUtilisateurServeur().getNom().equals(utilisateurServeur.getNom()));
-
+        if (deleted){
+            amountOfUsers = interfaceAcheteurListInscris.size();
+        }
         try {
             LocateRegistry.getRegistry(utilisateurServeur.getIp(), CommonVariables.PORT).unbind(utilisateurServeur.getNom());
         } catch (NotBoundException e) {
@@ -211,14 +245,12 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
      * Initiate a new sell, by emptying the waiting list
      */
     public synchronized void initiateSell() {
-        notifyAll();
-
         //FIXME sending nouvelle soumission right after adding them wont work
         saleOver = false;
         if (!interfaceAcheteurListInscris.isEmpty()) {
 
             LOGGER.info("Notifying users");
-            amountOfWaitingUsers = 0;
+            //amountOfUsers = 0; commenté car on se sert désormais du nb d'users connectés
             interfaceAcheteurListSale = Collections.synchronizedList(new ArrayList<>(interfaceAcheteurListInscris));
 
             interfaceAcheteurListSale.forEach(interfaceAcheteurWithUser -> {
@@ -232,6 +264,7 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
                 }
             });
         }
+        notifyAll();
     }
 
     /**

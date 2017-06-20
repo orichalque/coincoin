@@ -134,11 +134,11 @@ public class ServeurVente extends UnicastRemoteObject implements InterfaceServeu
                 } catch (NotBoundException e) {
                     LOGGER.log(Level.WARNING, String.format("The user %s has not been bound", utilisateurServeur.getNom()), e);
                 }
-                notifyAll();//reveil des autres users en attente
-            }else{ // arrivé apres le début des ventes, attente
+                notifyAll();// wake the waiting users
+            }else{ // wait after the starting of the sale
                 LOGGER.info("attente d'un utilisateur apres commecencement");
                 try {
-                    wait(); // reveillé normalement par le notifyAll de initiateSell
+                    wait(); // woke up thanks to the notifyAll of initiateSell
                 } catch (InterruptedException e) {
                     LOGGER.log(Level.INFO, "Waiting interrupted for new session", e);
                 }
